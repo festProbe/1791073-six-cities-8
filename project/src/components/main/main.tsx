@@ -1,12 +1,33 @@
-import Card from '../card/card';
+import { OfferMock } from '../../types/offer';
+import OffersList from '../offers-list/offers-list';
 import Logo from '../logo/logo';
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
+import { MouseEventHandler } from 'react';
 
 
 type MainPageProps = {
-  placesCount: number;
+  offers: OfferMock[];
 }
 
-function Main({ placesCount }: MainPageProps): JSX.Element {
+function Main({ offers }: MainPageProps): JSX.Element {
+
+  const handleFilterClick: MouseEventHandler = (evt) => {
+    document.querySelectorAll('.places__option').forEach((option) => option.classList.remove('places__option--active'));
+    evt.currentTarget.classList.add('places__option--active');
+  };
+
+  const handleSortByButtonClick: MouseEventHandler = (evt) => {
+    if (evt.currentTarget.classList.contains('places__options--opened')) {
+      evt.currentTarget.classList.remove('places__options--opened');
+    } else {
+      evt.currentTarget.classList.add('places__options--opened');
+      document.addEventListener('click', () => {
+        document.querySelector('.places__options')?.classList.remove('places__options--opened');
+      });
+    }
+  };
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -19,9 +40,6 @@ function Main({ placesCount }: MainPageProps): JSX.Element {
             <div className="header__wrapper">
               <div className="header__left">
                 <Logo />
-                <a className="header__logo-link header__logo-link--active" href="/">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-                </a>
               </div>
               <nav className="header__nav">
                 <ul className="header__nav-list">
@@ -33,9 +51,9 @@ function Main({ placesCount }: MainPageProps): JSX.Element {
                     </a>
                   </li>
                   <li className="header__nav-item">
-                    <a className="header__nav-link" href="/">
+                    <Link className="header__nav-link" to={AppRoute.SignIn}>
                       <span className="header__signout">Sign out</span>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>
@@ -85,29 +103,23 @@ function Main({ placesCount }: MainPageProps): JSX.Element {
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">{placesCount} places to stay in Amsterdam</b>
+                <b className="places__found">{offers.length} places to stay in Amsterdam</b>
                 <form className="places__sorting" action="/" method="get">
-                  <span className="places__sorting-caption">Sort by</span>
-                  <span className="places__sorting-type" tabIndex={0}>
+                  <span className="places__sorting-caption">Sort by </span>
+                  <span className="places__sorting-type" tabIndex={0} onClick={handleSortByButtonClick}>
                     Popular
                     <svg className="places__sorting-arrow" width="7" height="4">
                       <use xlinkHref="/icon-arrow-select"></use>
                     </svg>
                   </span>
-                  <ul className="places__options places__options--custom places__options--opened">
-                    <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                    <li className="places__option" tabIndex={0}>Price: low to high</li>
-                    <li className="places__option" tabIndex={0}>Price: high to low</li>
-                    <li className="places__option" tabIndex={0}>Top rated first</li>
+                  <ul className="places__options places__options--custom">
+                    <li className="places__option places__option--active" onClick={handleFilterClick} tabIndex={0}>Popular</li>
+                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: low to high</li>
+                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: high to low</li>
+                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Top rated first</li>
                   </ul>
                 </form>
-                <div className="cities__places-list places__list tabs__content">
-                  <Card></Card>
-                  <Card></Card>
-                  <Card></Card>
-                  <Card></Card>
-                  <Card></Card>
-                </div>
+                <OffersList offers={offers} />
               </section>
               <div className="cities__right-section">
                 <section className="cities__map map"></section>
@@ -115,7 +127,7 @@ function Main({ placesCount }: MainPageProps): JSX.Element {
             </div>
           </div>
         </main>
-      </div>
+      </div >
     </>
   );
 }
