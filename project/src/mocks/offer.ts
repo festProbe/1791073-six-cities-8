@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid';
+import { LOCATIONS } from '../const';
 import { OfferMock } from '../types/offer';
 
-export const generateOffer = (): OfferMock => {
+export const generateOffer = (index: number): OfferMock => {
 
   function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
@@ -31,6 +32,7 @@ export const generateOffer = (): OfferMock => {
     images: ['apartment-01.jpg', 'apartment-02.jpg, apartment-03.jpg'],
     isFavorite: Boolean(getRandomInt(0, 2)),
     isPremium: Boolean(getRandomInt(0, 2)),
+    location: LOCATIONS[index],
     maxAdults: getRandomInt(1, 4),
     previewImage: 'img/apartment-03.jpg',
     price: getRandomInt(100, 10000),

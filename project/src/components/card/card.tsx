@@ -4,10 +4,10 @@ import { AppRoute } from '../../const';
 
 type CardProps = {
   offer: OfferMock,
-  setPlaceId: () => void
+  selectedPlace: () => void
 }
 
-function Card({ offer, setPlaceId }: CardProps): JSX.Element {
+function Card({ offer, selectedPlace }: CardProps): JSX.Element {
 
   const { rating, price, type, title, previewImage, id, isPremium, isFavorite } = offer;
 
@@ -17,7 +17,7 @@ function Card({ offer, setPlaceId }: CardProps): JSX.Element {
 
   return (
     <article className="cities__place-card place-card"
-      onMouseOver={setPlaceId}
+      onMouseOver={selectedPlace}
     >
       {isPremium ?
         <div className="place-card__mark">
