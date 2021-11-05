@@ -5,13 +5,13 @@ type HostMock = {
   name: string
 }
 
-type Location = {
+export type Location = {
   latitude: number,
   longitude: number,
   zoom: number
 }
 
-type City = {
+export type City = {
   location: Location,
   name: string
 }
@@ -26,6 +26,7 @@ export type OfferMock = {
   images: string[],
   isFavorite: boolean,
   isPremium: boolean,
+  location: Location,
   maxAdults: number,
   previewImage: string,
   price: number,

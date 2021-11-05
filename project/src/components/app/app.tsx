@@ -34,7 +34,7 @@ function App({ offers }: OffersProps): JSX.Element {
         </Route>
         <Route path={AppRoute.Room} exact>
           <Property addReview={() => {
-            throw new Error ('Function \'addReview\' isn\'t implemented.');
+            throw new Error('Function \'addReview\' isn\'t implemented.');
           }}
           />
         </Route>

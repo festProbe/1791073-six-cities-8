@@ -1,9 +1,11 @@
-import { OfferMock } from '../../types/offer';
+import { OfferMock, Location } from '../../types/offer';
 import OffersList from '../offers-list/offers-list';
 import Logo from '../logo/logo';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useState } from 'react';
+import Map from '../map/map';
+import { getUniqueCities } from '../../utils';
 
 
 type MainPageProps = {
@@ -11,6 +13,20 @@ type MainPageProps = {
 }
 
 function Main({ offers }: MainPageProps): JSX.Element {
+
+  const cities = getUniqueCities(offers.map((offer) => offer.city));
+  const locations = offers.map((offer) => offer.location);
+
+  const [selectedPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
+
+  // eslint-disable-next-line no-console
+  console.log(selectedPlace);
+
+  function onCardHover(cardLocation: Location): void {
+    const currentPlace = locations.find((location) => location.latitude === cardLocation.latitude && location.longitude === cardLocation.longitude);
+    setSelectedPlace(currentPlace);
+  }
+
 
   const handleFilterClick: MouseEventHandler = (evt) => {
     document.querySelectorAll('.places__option').forEach((option) => option.classList.remove('places__option--active'));
@@ -119,10 +135,12 @@ function Main({ offers }: MainPageProps): JSX.Element {
                     <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Top rated first</li>
                   </ul>
                 </form>
-                <OffersList offers={offers} />
+                <OffersList offers={offers} selectedPlace={onCardHover} />
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map"></section>
+                <section className="cities__map map">
+                  <Map cities={cities} locations={locations} selectedPlace={selectedPlace}></Map>
+                </section>
               </div>
             </div>
           </div>
