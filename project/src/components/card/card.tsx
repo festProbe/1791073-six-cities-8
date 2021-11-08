@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { OfferMock } from '../../types/offer';
 import { AppRoute } from '../../const';
+import { useRouteMatch } from 'react-router';
+import { getCardClass, getImageWrapperClass } from '../../utils';
 
 type CardProps = {
   offer: OfferMock,
@@ -9,6 +11,8 @@ type CardProps = {
 
 function Card({ offer, selectedPlace }: CardProps): JSX.Element {
 
+  const match = useRouteMatch();
+
   const { rating, price, type, title, previewImage, id, isPremium, isFavorite } = offer;
 
   const stars = {
@@ -16,14 +20,14 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
   };
 
   return (
-    <article className="cities__place-card place-card"
+    <article className={getCardClass(match.path)}
       onMouseOver={selectedPlace}
     >
       {isPremium ?
         <div className="place-card__mark">
           <span>Premium</span>
         </div> : ''}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={getImageWrapperClass(match.path)}>
         <Link to={`/offer/ + ${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </Link>

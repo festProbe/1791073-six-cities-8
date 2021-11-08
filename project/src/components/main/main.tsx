@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { MouseEventHandler, useState } from 'react';
 import Map from '../map/map';
+import { MapMock } from '../../types/map';
 import { getUniqueCities } from '../../utils';
 
 
@@ -13,20 +14,17 @@ type MainPageProps = {
 }
 
 function Main({ offers }: MainPageProps): JSX.Element {
+  const [currentPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
 
-  const cities = getUniqueCities(offers.map((offer) => offer.city));
-  const locations = offers.map((offer) => offer.location);
-
-  const [selectedPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
-
-  // eslint-disable-next-line no-console
-  console.log(selectedPlace);
+  const mapProps: MapMock = {
+    city: getUniqueCities(offers.map((offer) => offer.city))[0],
+    locations: offers.map((offer) => offer.location),
+    selectedPlace: currentPlace,
+  };
 
   function onCardHover(cardLocation: Location): void {
-    const currentPlace = locations.find((location) => location.latitude === cardLocation.latitude && location.longitude === cardLocation.longitude);
-    setSelectedPlace(currentPlace);
+    setSelectedPlace(cardLocation);
   }
-
 
   const handleFilterClick: MouseEventHandler = (evt) => {
     document.querySelectorAll('.places__option').forEach((option) => option.classList.remove('places__option--active'));
@@ -139,7 +137,7 @@ function Main({ offers }: MainPageProps): JSX.Element {
               </section>
               <div className="cities__right-section">
                 <section className="cities__map map">
-                  <Map cities={cities} locations={locations} selectedPlace={selectedPlace}></Map>
+                  <Map mapProps={mapProps}></Map>
                 </section>
               </div>
             </div>

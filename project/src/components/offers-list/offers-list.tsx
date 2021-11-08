@@ -1,13 +1,17 @@
 import React from 'react';
+import { useRouteMatch } from 'react-router';
 import { Location, OfferMock } from '../../types/offer';
+import { getListClass } from '../../utils';
 import Card from '../card/card';
 
 type OffersListProps = {
   offers: OfferMock[];
-  selectedPlace: (location: Location) => void;
+  selectedPlace: (place: Location) => void;
 }
 
 function OffersList({ offers, selectedPlace }: OffersListProps): JSX.Element {
+
+  const match = useRouteMatch();
 
   const cards = offers.map((place) => (
     <Card
@@ -17,7 +21,9 @@ function OffersList({ offers, selectedPlace }: OffersListProps): JSX.Element {
     />));
 
   return (
-    <div className="cities__places-list places__list tabs__content" >
+    <div
+      className={getListClass(match.path)}
+    >
       {cards}
     </div>
   );

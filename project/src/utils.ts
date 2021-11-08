@@ -1,3 +1,4 @@
+import { AppRoute, CARD_CLASSES, LIST_CLASSES } from './const';
 import { City } from './types/offer';
 
 export function getUniqueCities(citiesTest: City[]): City[] {
@@ -11,4 +12,38 @@ export function getUniqueCities(citiesTest: City[]): City[] {
     }
   }
   return newCities;
+}
+
+export function getListClass(pathname: string): string {
+  switch (pathname) {
+    case AppRoute.Main:
+      return LIST_CLASSES.MAIN_LIST_CLASS;
+    case AppRoute.Room:
+      return LIST_CLASSES.PROPERTY_LIST_CLASS;
+    default:
+      return '';
+  }
+}
+
+export function getCardClass(pathname: string): string {
+  switch (pathname) {
+    case AppRoute.Main:
+      return CARD_CLASSES.MAIN_CARD_CLASS;
+    case AppRoute.Room:
+      return CARD_CLASSES.PROPERTY_CARD_CLASS;
+    default:
+      return '';
+  }
+}
+
+export function getImageWrapperClass(pathname: string): string {
+  switch (pathname) {
+    case AppRoute.Main:
+      return CARD_CLASSES.MAIN_CARD_IMAGE_WRAPPER_CLASS;
+    case AppRoute.Room:
+      return CARD_CLASSES.PROPERTY_CARD_IMAGE_WRAPPER_CLASS;
+    default:
+      return '';
+  }
+
 }

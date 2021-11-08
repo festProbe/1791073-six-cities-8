@@ -1,21 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { City, Location } from '../../types/offer';
 import useMap from '../../hooks/useMap';
 import { PINS_URLS } from '../../const';
+import { MapMock } from '../../types/map';
 
 type MapProps = {
-  cities: City[];
-  locations: Location[];
-  selectedPlace: Location | undefined;
+  mapProps: MapMock;
 }
 
-function Map({ cities, locations, selectedPlace }: MapProps): JSX.Element {
+function Map({ mapProps }: MapProps): JSX.Element {
 
+  const { city, locations, selectedPlace } = mapProps;
 
   const mapRef = useRef(null);
-  const map = useMap(mapRef, cities[0].location);
+  const map = useMap(mapRef, city.location);
 
   const defaultCustomIcon = leaflet.icon({
     iconUrl: PINS_URLS.MAIN_PIN,

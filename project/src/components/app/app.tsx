@@ -1,4 +1,4 @@
-import MainPage from '../main/main';
+import Main from '../main/main';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
@@ -9,18 +9,18 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { OfferMock } from '../../types/offer';
 
 type OffersProps = {
-  offers: OfferMock[]
+  offers: OfferMock[];
+  neighbourhoodPlaces: OfferMock[];
 }
 
-function App({ offers }: OffersProps): JSX.Element {
-
+function App({ offers, neighbourhoodPlaces }: OffersProps): JSX.Element {
   const favorites: OfferMock[] = offers.filter((offer) => offer.isFavorite);
 
   return (
     <BrowserRouter>
       <Switch>
         <Route path={AppRoute.Main} exact>
-          <MainPage offers={offers} />;
+          <Main offers={offers} />;
         </Route>
         <PrivateRoute
           exact
@@ -33,9 +33,11 @@ function App({ offers }: OffersProps): JSX.Element {
           <SignIn />
         </Route>
         <Route path={AppRoute.Room} exact>
-          <Property addReview={() => {
-            throw new Error('Function \'addReview\' isn\'t implemented.');
-          }}
+          <Property
+            neighbourhoodPlaces={neighbourhoodPlaces}
+            addReview={() => {
+              throw new Error('Function \'addReview\' isn\'t implemented.');
+            }}
           />
         </Route>
         <Route><NotFoundScreen /></Route>
