@@ -38,3 +38,15 @@ export const PINS_URLS = {
   ACTIVE_PIN: 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg',
   MAIN_PIN: 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg',
 };
+
+export const LIST_CLASSES = {
+  MAIN_LIST_CLASS: 'cities__places-list  tabs__content places__list',
+  PROPERTY_LIST_CLASS: 'near-places__list places__list',
+};
+
+export const CARD_CLASSES = {
+  MAIN_CARD_CLASS: 'cities__place-card place-card',
+  PROPERTY_CARD_CLASS: 'near-places__card place-card',
+  MAIN_CARD_IMAGE_WRAPPER_CLASS: 'cities__image-wrapper place-card__image-wrapper',
+  PROPERTY_CARD_IMAGE_WRAPPER_CLASS: 'near-places__image-wrapper place-card__image-wrapper',
+};
