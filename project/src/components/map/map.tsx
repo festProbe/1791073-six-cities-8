@@ -3,15 +3,17 @@ import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/useMap';
 import { PINS_URLS } from '../../const';
-import { MapMock } from '../../types/map';
+import { Location, OfferMock } from '../../types/offer';
 
 type MapProps = {
-  mapProps: MapMock;
+  offers: OfferMock[];
+  currentPlace: Location | undefined;
 }
 
-function Map({ mapProps }: MapProps): JSX.Element {
+function Map({ offers, currentPlace }: MapProps): JSX.Element {
 
-  const { city, locations, selectedPlace } = mapProps;
+  const city = offers[0].city;
+  const locations = offers.map((offer) => offer.location);
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city.location);
@@ -35,14 +37,14 @@ function Map({ mapProps }: MapProps): JSX.Element {
           lat: location.latitude,
           lng: location.longitude,
         }, {
-          icon: (selectedPlace !== undefined && selectedPlace.latitude === location.latitude && selectedPlace.longitude === location.longitude)
+          icon: (currentPlace !== undefined && currentPlace.latitude === location.latitude && currentPlace.longitude === location.longitude)
             ? currentCustomIcon
             : defaultCustomIcon,
         })
           .addTo(map);
       });
     }
-  }, [map, locations, defaultCustomIcon, selectedPlace, currentCustomIcon]);
+  }, [map, locations, defaultCustomIcon, currentPlace, currentCustomIcon]);
 
   return (
     <div

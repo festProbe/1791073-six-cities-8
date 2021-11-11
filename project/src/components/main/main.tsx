@@ -5,22 +5,15 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { MouseEventHandler, useState } from 'react';
 import Map from '../map/map';
-import { MapMock } from '../../types/map';
-import { getUniqueCities } from '../../utils';
-
 
 type MainPageProps = {
+  city: string | null,
   offers: OfferMock[];
+  chooseCity: (city: string | null) => void;
 }
 
-function Main({ offers }: MainPageProps): JSX.Element {
+function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
   const [currentPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
-
-  const mapProps: MapMock = {
-    city: getUniqueCities(offers.map((offer) => offer.city))[0],
-    locations: offers.map((offer) => offer.location),
-    selectedPlace: currentPlace,
-  };
 
   function onCardHover(cardLocation: Location): void {
     setSelectedPlace(cardLocation);
@@ -31,7 +24,7 @@ function Main({ offers }: MainPageProps): JSX.Element {
     evt.currentTarget.classList.add('places__option--active');
   };
 
-  const handleSortByButtonClick: MouseEventHandler = (evt) => {
+  const handleSortByButtonClick: MouseEventHandler = (evt): void => {
     if (evt.currentTarget.classList.contains('places__options--opened')) {
       evt.currentTarget.classList.remove('places__options--opened');
     } else {
@@ -40,6 +33,19 @@ function Main({ offers }: MainPageProps): JSX.Element {
         document.querySelector('.places__options')?.classList.remove('places__options--opened');
       });
     }
+  };
+
+  const citiesLinks = document.querySelectorAll('.locations__item-link');
+
+  const handleSitiesClick: MouseEventHandler = (evt): void => {
+    evt.preventDefault();
+    citiesLinks.forEach((link) => {
+      if (link.classList.contains('tabs__item--active')) {
+        link.classList.remove('tabs__item--active');
+      }
+    });
+    evt.currentTarget.classList.add('tabs__item--active');
+    chooseCity(evt.currentTarget.textContent);
   };
 
   return (
@@ -81,34 +87,34 @@ function Main({ offers }: MainPageProps): JSX.Element {
             <section className="locations container">
               <ul className="locations__list tabs__list">
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="/">
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Paris</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="/">
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Cologne</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="/">
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Brussels</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item tabs__item--active" href="/">
+                  <Link className="locations__item-link tabs__item tabs__item--active" to="/" onClick={handleSitiesClick}>
                     <span>Amsterdam</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="/">
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Hamburg</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="/">
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Dusseldorf</span>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </section>
@@ -117,27 +123,30 @@ function Main({ offers }: MainPageProps): JSX.Element {
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">{offers.length} places to stay in Amsterdam</b>
-                <form className="places__sorting" action="/" method="get">
-                  <span className="places__sorting-caption">Sort by </span>
-                  <span className="places__sorting-type" tabIndex={0} onClick={handleSortByButtonClick}>
-                    Popular
-                    <svg className="places__sorting-arrow" width="7" height="4">
-                      <use xlinkHref="/icon-arrow-select"></use>
-                    </svg>
-                  </span>
-                  <ul className="places__options places__options--custom">
-                    <li className="places__option places__option--active" onClick={handleFilterClick} tabIndex={0}>Popular</li>
-                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: low to high</li>
-                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: high to low</li>
-                    <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Top rated first</li>
-                  </ul>
-                </form>
-                <OffersList offers={offers} selectedPlace={onCardHover} />
+                <b className="places__found">{offers.length !== 0 ? `${offers.length} places to stay in ${city}` : 'No places to stay available'}</b>
+                {offers.length !== 0
+                  ?
+                  <form className="places__sorting" action="/" method="get">
+                    <span className="places__sorting-caption">Sort by </span>
+                    <span className="places__sorting-type" tabIndex={0} onClick={handleSortByButtonClick}>
+                      Popular
+                      <svg className="places__sorting-arrow" width="7" height="4">
+                        <use xlinkHref="/icon-arrow-select"></use>
+                      </svg>
+                    </span>
+                    <ul className="places__options places__options--custom">
+                      <li className="places__option places__option--active" onClick={handleFilterClick} tabIndex={0}>Popular</li>
+                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: low to high</li>
+                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: high to low</li>
+                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Top rated first</li>
+                    </ul>
+                  </form>
+                  : ''}
+                {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} />}
               </section>
               <div className="cities__right-section">
                 <section className="cities__map map">
-                  <Map mapProps={mapProps}></Map>
+                  {offers.length !== 0 ? <Map offers={offers} currentPlace={currentPlace}></Map> : ''}
                 </section>
               </div>
             </div>
