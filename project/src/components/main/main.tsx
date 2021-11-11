@@ -19,19 +19,24 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
     setSelectedPlace(cardLocation);
   }
 
+  const placesOptions = document.querySelector('.places__options');
+
   const handleFilterClick: MouseEventHandler = (evt) => {
+    const sortingType = document.querySelector('.places__sorting-type');
     document.querySelectorAll('.places__option').forEach((option) => option.classList.remove('places__option--active'));
     evt.currentTarget.classList.add('places__option--active');
+    if (sortingType !== null) {
+      sortingType.textContent = evt.currentTarget.textContent;
+    }
+    placesOptions?.classList.remove('places__options--opened');
   };
 
   const handleSortByButtonClick: MouseEventHandler = (evt): void => {
-    if (evt.currentTarget.classList.contains('places__options--opened')) {
-      evt.currentTarget.classList.remove('places__options--opened');
+    evt.preventDefault();
+    if (placesOptions?.classList.contains('places__options--opened')) {
+      placesOptions?.classList.remove('places__options--opened');
     } else {
-      evt.currentTarget.classList.add('places__options--opened');
-      document.addEventListener('click', () => {
-        document.querySelector('.places__options')?.classList.remove('places__options--opened');
-      });
+      placesOptions?.classList.add('places__options--opened');
     }
   };
 
@@ -145,7 +150,7 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
                 {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} />}
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map">
+                <section className="cities__map map" style={offers.length !== 0 ? { backgroundImage: 'none' } : {}}>
                   {offers.length !== 0 ? <Map offers={offers} currentPlace={currentPlace}></Map> : ''}
                 </section>
               </div>
