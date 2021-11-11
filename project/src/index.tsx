@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './components/app/app';
-import { generateOffer } from './mocks/offer';
+import { reducer } from './store/reducer';
 
-const OFFERS_COUNT = 4;
-
-const offers = new Array(OFFERS_COUNT).fill('').map((el, index: number) => generateOffer(index));
-const neighbourhoodPlaces = offers.slice(0, 3);
+const store = createStore(
+  reducer,
+  composeWithDevTools(),
+);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App offers={offers} neighbourhoodPlaces={neighbourhoodPlaces} />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

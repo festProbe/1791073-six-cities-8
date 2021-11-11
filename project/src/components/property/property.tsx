@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { MapMock } from '../../types/map';
 import { OfferMock, Location } from '../../types/offer';
-import { getUniqueCities } from '../../utils';
 import Logo from '../logo/logo';
 import Map from '../map/map';
 import NewReview from '../new-review-form/new-review-form';
@@ -16,12 +14,6 @@ type PropertyProps = {
 function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Element {
 
   const [currentPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
-
-  const mapProps: MapMock = {
-    city: getUniqueCities(neighbourhoodPlaces.map((neighbourhoodPlace) => neighbourhoodPlace.city))[0],
-    locations: neighbourhoodPlaces.map((neighbourhoodPlace) => neighbourhoodPlace.location),
-    selectedPlace: currentPlace,
-  };
 
   function onCardHover(cardLocation: Location): void {
     setSelectedPlace(cardLocation);
@@ -187,7 +179,7 @@ function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Elemen
               </div>
             </div>
             <section className="property__map map">
-              <Map mapProps={mapProps} />
+              <Map offers={neighbourhoodPlaces} currentPlace={currentPlace} />
             </section>
           </section>
           <div className="container">
