@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { MouseEventHandler, useState } from 'react';
 import Map from '../map/map';
+import SortOptions from '../sort-options/sort-options';
 
 type MainPageProps = {
   city: string | null,
@@ -19,35 +20,11 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
     setSelectedPlace(cardLocation);
   }
 
-  const placesOptions = document.querySelector('.places__options');
-
-  const handleFilterClick: MouseEventHandler = (evt) => {
-    const sortingType = document.querySelector('.places__sorting-type');
-    document.querySelectorAll('.places__option').forEach((option) => option.classList.remove('places__option--active'));
-    evt.currentTarget.classList.add('places__option--active');
-    if (sortingType !== null) {
-      sortingType.textContent = evt.currentTarget.textContent;
-    }
-    placesOptions?.classList.remove('places__options--opened');
-  };
-
-  const handleSortByButtonClick: MouseEventHandler = (evt): void => {
-    evt.preventDefault();
-    if (placesOptions?.classList.contains('places__options--opened')) {
-      placesOptions?.classList.remove('places__options--opened');
-    } else {
-      placesOptions?.classList.add('places__options--opened');
-    }
-  };
-
-  const citiesLinks = document.querySelectorAll('.locations__item-link');
-
   const handleSitiesClick: MouseEventHandler = (evt): void => {
+    const citiesLinks = document.querySelectorAll('.locations__item-link');
     evt.preventDefault();
     citiesLinks.forEach((link) => {
-      if (link.classList.contains('tabs__item--active')) {
-        link.classList.remove('tabs__item--active');
-      }
+      link.classList.remove('tabs__item--active');
     });
     evt.currentTarget.classList.add('tabs__item--active');
     chooseCity(evt.currentTarget.textContent);
@@ -92,7 +69,7 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
             <section className="locations container">
               <ul className="locations__list tabs__list">
                 <li className="locations__item">
-                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
+                  <Link className="locations__item-link tabs__item tabs__item--active" to="/" onClick={handleSitiesClick}>
                     <span>Paris</span>
                   </Link>
                 </li>
@@ -107,7 +84,7 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
                   </Link>
                 </li>
                 <li className="locations__item">
-                  <Link className="locations__item-link tabs__item tabs__item--active" to="/" onClick={handleSitiesClick}>
+                  <Link className="locations__item-link tabs__item" to="/" onClick={handleSitiesClick}>
                     <span>Amsterdam</span>
                   </Link>
                 </li>
@@ -131,21 +108,7 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
                 <b className="places__found">{offers.length !== 0 ? `${offers.length} places to stay in ${city}` : 'No places to stay available'}</b>
                 {offers.length !== 0
                   ?
-                  <form className="places__sorting" action="/" method="get">
-                    <span className="places__sorting-caption">Sort by </span>
-                    <span className="places__sorting-type" tabIndex={0} onClick={handleSortByButtonClick}>
-                      Popular
-                      <svg className="places__sorting-arrow" width="7" height="4">
-                        <use xlinkHref="/icon-arrow-select"></use>
-                      </svg>
-                    </span>
-                    <ul className="places__options places__options--custom">
-                      <li className="places__option places__option--active" onClick={handleFilterClick} tabIndex={0}>Popular</li>
-                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: low to high</li>
-                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Price: high to low</li>
-                      <li className="places__option" onClick={handleFilterClick} tabIndex={0}>Top rated first</li>
-                    </ul>
-                  </form>
+                  <SortOptions />
                   : ''}
                 {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} />}
               </section>

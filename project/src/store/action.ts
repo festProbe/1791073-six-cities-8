@@ -8,3 +8,8 @@ export const choosenCity = (city: string | null) => ({
 export const offersFromChosenCity = () => ({
   type: ActionType.OffersFromChosenCity,
 } as const);
+
+export const offersBySortType = (sortType: string) => ({
+  type: ActionType.OffersBySortType,
+  payload: sortType,
+} as const);
