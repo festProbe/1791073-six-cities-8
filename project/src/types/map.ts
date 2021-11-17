@@ -1,6 +1,6 @@
 import { City, Location } from './offer';
 
-export type MapMock = {
+export type Map = {
   city: City,
   locations: Location[],
   selectedPlace: Location | undefined,

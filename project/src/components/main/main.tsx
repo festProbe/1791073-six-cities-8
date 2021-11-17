@@ -1,20 +1,45 @@
-import { OfferMock, Location } from '../../types/offer';
+import { Location, Offer } from '../../types/offer';
 import OffersList from '../offers-list/offers-list';
 import Logo from '../logo/logo';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
-import { MouseEventHandler, useState } from 'react';
+import { MouseEventHandler } from 'react';
+import { Dispatch } from 'redux';
+import { Actions } from '../../types/action';
 import Map from '../map/map';
+import { connect, ConnectedProps } from 'react-redux';
+import { choosenCity, offersFromChosenCity, selectedCurrentPlace } from '../../store/action';
 import SortOptions from '../sort-options/sort-options';
+import { State } from '../../types/state';
 
-type MainPageProps = {
-  city: string | null,
-  offers: OfferMock[];
-  chooseCity: (city: string | null) => void;
+type MainProps = {
+  setOffer: (offer: Offer) => void,
 }
 
-function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
-  const [currentPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
+const mapStateToProps = ({ city, offers, currentPlace, authorizationStatus, isDataLoaded }: State) => ({
+  city,
+  currentPlace,
+  offers,
+  authorizationStatus,
+  isDataLoaded,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
+  rerenderOffersFromChosenCity(city: string | null) {
+    dispatch(choosenCity(city));
+    dispatch(offersFromChosenCity());
+  },
+  setSelectedPlace(location: Location) {
+    dispatch(selectedCurrentPlace(location));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedElementProps = MainProps & PropsFromRedux;
+
+function Main({ city, offers, rerenderOffersFromChosenCity, setSelectedPlace, currentPlace, setOffer }: ConnectedElementProps): JSX.Element {
 
   function onCardHover(cardLocation: Location): void {
     setSelectedPlace(cardLocation);
@@ -27,7 +52,7 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
       link.classList.remove('tabs__item--active');
     });
     evt.currentTarget.classList.add('tabs__item--active');
-    chooseCity(evt.currentTarget.textContent);
+    rerenderOffersFromChosenCity(evt.currentTarget.textContent);
   };
 
   return (
@@ -110,11 +135,11 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
                   ?
                   <SortOptions />
                   : ''}
-                {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} />}
+                {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} setOffer={setOffer} />}
               </section>
               <div className="cities__right-section">
                 <section className="cities__map map" style={offers.length !== 0 ? { backgroundImage: 'none' } : {}}>
-                  {offers.length !== 0 ? <Map offers={offers} currentPlace={currentPlace}></Map> : ''}
+                  {offers.length !== 0 ? <Map offers={offers} currentPlace={currentPlace} /> : ''}
                 </section>
               </div>
             </div>
@@ -125,4 +150,5 @@ function Main({ city, offers, chooseCity }: MainPageProps): JSX.Element {
   );
 }
 
-export default Main;
+export { Main };
+export default connector(Main);

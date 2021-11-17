@@ -1,13 +1,19 @@
-import { OfferMock } from '../../types/offer';
+import { connect, ConnectedProps } from 'react-redux';
+import { Offer } from '../../types/offer';
+import { State } from '../../types/state';
 import Logo from '../logo/logo';
 
-type FavoritesProps = {
-  favorites: OfferMock[];
-}
+const mapStateToProps = ({ allOffers }: State) => ({
+  allOffers,
+});
 
-function Favorites(props: FavoritesProps): JSX.Element {
+const connector = connect(mapStateToProps);
 
-  const { favorites } = props;
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Favorites({ allOffers }: PropsFromRedux): JSX.Element {
+
+  const favorites = allOffers.filter((offer) => offer.isFavorite);
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -58,7 +64,7 @@ function Favorites(props: FavoritesProps): JSX.Element {
                         </div>
                       </div>
                       <div className="favorites__places">
-                        {favorites.map((place: OfferMock) => {
+                        {favorites.map((place: Offer) => {
                           const { id, price, rating } = place;
 
                           return (
@@ -153,4 +159,5 @@ function Favorites(props: FavoritesProps): JSX.Element {
   );
 }
 
-export default Favorites;
+export { Favorites };
+export default connector(Favorites);
