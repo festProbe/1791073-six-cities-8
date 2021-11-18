@@ -1,8 +1,6 @@
 import { Location, Offer } from '../../types/offer';
 import OffersList from '../offers-list/offers-list';
-import Logo from '../logo/logo';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
 import { MouseEventHandler } from 'react';
 import { Dispatch } from 'redux';
 import { Actions } from '../../types/action';
@@ -11,6 +9,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { choosenCity, offersFromChosenCity, selectedCurrentPlace } from '../../store/action';
 import SortOptions from '../sort-options/sort-options';
 import { State } from '../../types/state';
+import Header from '../header/header';
 
 type MainProps = {
   setOffer: (offer: Offer) => void,
@@ -62,31 +61,7 @@ function Main({ city, offers, rerenderOffersFromChosenCity, setSelectedPlace, cu
       </div>
 
       <div className="page page--gray page--main">
-        <header className="header">
-          <div className="container">
-            <div className="header__wrapper">
-              <div className="header__left">
-                <Logo />
-              </div>
-              <nav className="header__nav">
-                <ul className="header__nav-list">
-                  <li className="header__nav-item user">
-                    <a className="header__nav-link header__nav-link--profile" href="/">
-                      <div className="header__avatar-wrapper user__avatar-wrapper">
-                      </div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    </a>
-                  </li>
-                  <li className="header__nav-item">
-                    <Link className="header__nav-link" to={AppRoute.SignIn}>
-                      <span className="header__signout">Sign out</span>
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header />
 
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
