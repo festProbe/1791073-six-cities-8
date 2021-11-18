@@ -1,31 +1,33 @@
 import { Link } from 'react-router-dom';
-import { OfferMock } from '../../types/offer';
+import { Offer } from '../../types/offer';
 import { AppRoute } from '../../const';
-import { useHistory, useRouteMatch } from 'react-router';
+import { useRouteMatch } from 'react-router';
 import { getCardClass, getImageWrapperClass } from '../../utils';
 
 type CardProps = {
-  offer: OfferMock,
-  selectedPlace: () => void
+  offer: Offer,
+  selectedPlace: () => void,
+  setOffer: () => void,
 }
 
-function Card({ offer, selectedPlace }: CardProps): JSX.Element {
+function Card({ offer, selectedPlace, setOffer }: CardProps): JSX.Element {
 
   const match = useRouteMatch();
-  const history = useHistory();
 
   const { rating, price, type, title, previewImage, id, isPremium, isFavorite } = offer;
 
+  const onCardClick = () => {
+    setOffer();
+  };
+
+
   const stars = {
-    width: rating,
+    width: rating * 30,
   };
 
   return (
     <article className={getCardClass(match.path)}
       onMouseOver={selectedPlace}
-      onClick={() => {
-        history.push(`${AppRoute.Room}${id}`);
-      }}
     >
       {
         isPremium ?
@@ -34,7 +36,9 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
           </div > : ''
       }
       <div className={getImageWrapperClass(match.path)}>
-        <Link to={AppRoute.Room + id}>
+        <Link to={AppRoute.Room + id}
+          onClick={onCardClick}
+        >
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </Link>
       </div>

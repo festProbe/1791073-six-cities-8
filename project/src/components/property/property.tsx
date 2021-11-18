@@ -1,23 +1,76 @@
-import { useState } from 'react';
-import { OfferMock, Location } from '../../types/offer';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
 import Logo from '../logo/logo';
 import Map from '../map/map';
 import NewReview from '../new-review-form/new-review-form';
 import OffersList from '../offers-list/offers-list';
 import ReviewsList from '../reviews-list/reviews-list';
+import { Dispatch } from 'redux';
+import { Location, Offer } from '../../types/offer';
+import { Actions } from '../../types/action';
+import { selectedCurrentPlace } from '../../store/action';
 
 type PropertyProps = {
-  neighbourhoodPlaces: OfferMock[];
+  offer: Offer | null;
+  setOffer: (offer: Offer) => void;
   addReview: (comment: string, rating: number) => void;
 }
 
-function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Element {
+const mapStateToProps = ({ offers, currentPlace }: State) => ({
+  offers,
+  currentPlace,
+});
 
-  const [currentPlace, setSelectedPlace] = useState<Location | undefined>(undefined);
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
+  setSelectedPlace(location: Location) {
+    dispatch(selectedCurrentPlace(location));
+  },
+});
 
-  function onCardHover(cardLocation: Location): void {
-    setSelectedPlace(cardLocation);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedElementProps = PropsFromRedux & PropertyProps;
+
+function Property({ offer, setOffer, offers, currentPlace, addReview, setSelectedPlace }: ConnectedElementProps): JSX.Element {
+
+  const {
+    title,
+    images,
+    isPremium,
+    isFavorite,
+    rating,
+    maxAdults,
+    bedrooms,
+    type,
+    price,
+    goods,
+    host,
+    description,
+  } = offer ? offer : offers[0];
+
+  const { avatarUrl, isPro, name } = host;
+  const stars = {
+    width: rating * 30,
+  };
+  // eslint-disable-next-line no-console
+  console.log(offer);
+  const neighbourhoodPlaces = offers.slice(0, 3);
+  const offerImages = images.map((image) => (
+    <div key={`Image_${images.indexOf(image)}`} className="property__image-wrapper">
+      <img className="property__image" src={image} alt="Studio" />
+    </div>
+  ));
+
+  const offerGoods = goods.map((good) => (
+    <li key={`Image_${images.indexOf(good)}`} className="property__inside-item">
+      {good}
+    </li>
+  ));
+  function onCardHover(location: Location) {
+    setSelectedPlace(location);
   }
+
 
   return (
     <>
@@ -56,36 +109,20 @@ function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Elemen
           <section className="property">
             <div className="property__gallery-container container">
               <div className="property__gallery">
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/room.jpg" alt="Studio" />
-                </div>
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/apartment-01.jpg" alt="Studio" />
-                </div>
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/apartment-02.jpg" alt="Studio" />
-                </div>
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/apartment-03.jpg" alt="Studio" />
-                </div>
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/studio-01.jpg" alt="Studio" />
-                </div>
-                <div className="property__image-wrapper">
-                  <img className="property__image" src="img/apartment-01.jpg" alt="Studio" />
-                </div>
+                {offerImages}
               </div>
             </div>
             <div className="property__container container">
               <div className="property__wrapper">
-                <div className="property__mark">
-                  <span>Premium</span>
-                </div>
+                {isPremium ?
+                  <div className="property__mark">
+                    <span>Premium</span>
+                  </div> : ''}
                 <div className="property__name-wrapper">
                   <h1 className="property__name">
-                    Beautiful &amp; luxurious studio at great location
+                    {title}
                   </h1>
-                  <button className="property__bookmark-button button" type="button">
+                  <button className={`property__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type="button">
                     <svg className="property__bookmark-icon" width="31" height="33">
                       <use xlinkHref="#icon-bookmark"></use>
                     </svg>
@@ -94,80 +131,49 @@ function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Elemen
                 </div>
                 <div className="property__rating rating">
                   <div className="property__stars rating__stars">
-                    <span style={{ width: '80%' }}></span>
+                    <span style={stars}></span>
                     <span className="visually-hidden">Rating</span>
                   </div>
-                  <span className="property__rating-value rating__value">4.8</span>
+                  <span className="property__rating-value rating__value">{rating}</span>
                 </div>
                 <ul className="property__features">
                   <li className="property__feature property__feature--entire">
-                    Apartment
+                    {type}
                   </li>
                   <li className="property__feature property__feature--bedrooms">
-                    3 Bedrooms
+                    {bedrooms} Bedrooms
                   </li>
                   <li className="property__feature property__feature--adults">
-                    Max 4 adults
+                    Max {maxAdults} adults
                   </li>
                 </ul>
                 <div className="property__price">
-                  <b className="property__price-value">&euro;120</b>
+                  <b className="property__price-value">&euro;{price}</b>
                   <span className="property__price-text">&nbsp;night</span>
                 </div>
                 <div className="property__inside">
                   <h2 className="property__inside-title">What&apos;s inside</h2>
                   <ul className="property__inside-list">
-                    <li className="property__inside-item">
-                      Wi-Fi
-                    </li>
-                    <li className="property__inside-item">
-                      Washing machine
-                    </li>
-                    <li className="property__inside-item">
-                      Towels
-                    </li>
-                    <li className="property__inside-item">
-                      Heating
-                    </li>
-                    <li className="property__inside-item">
-                      Coffee machine
-                    </li>
-                    <li className="property__inside-item">
-                      Baby seat
-                    </li>
-                    <li className="property__inside-item">
-                      Kitchen
-                    </li>
-                    <li className="property__inside-item">
-                      Dishwasher
-                    </li>
-                    <li className="property__inside-item">
-                      Cabel TV
-                    </li>
-                    <li className="property__inside-item">
-                      Fridge
-                    </li>
+                    {offerGoods}
                   </ul>
                 </div>
                 <div className="property__host">
                   <h2 className="property__host-title">Meet the host</h2>
                   <div className="property__host-user user">
                     <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-                      <img className="property__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
+                      <img className="property__avatar user__avatar" src={avatarUrl} width="74" height="74" alt="Host avatar" />
                     </div>
                     <span className="property__user-name">
-                      Angelina
+                      {name}
                     </span>
-                    <span className="property__user-status">
-                      Pro
-                    </span>
+                    {isPro ?
+                      <span className="property__user-status">
+                        Pro
+                      </span> : ''}
                   </div>
                   <div className="property__description">
                     <p className="property__text">
-                      A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                    </p>
-                    <p className="property__text">
-                      An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
+                      {description}
                     </p>
                   </div>
                 </div>
@@ -179,13 +185,13 @@ function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Elemen
               </div>
             </div>
             <section className="property__map map">
-              <Map offers={neighbourhoodPlaces} currentPlace={currentPlace} />
+              <Map offers={offers} currentPlace={currentPlace} />
             </section>
           </section>
           <div className="container">
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
-              <OffersList offers={neighbourhoodPlaces} selectedPlace={onCardHover} />
+              <OffersList offers={neighbourhoodPlaces} selectedPlace={onCardHover} setOffer={setOffer} />
             </section>
           </div>
         </main>
@@ -194,4 +200,5 @@ function Property({ neighbourhoodPlaces, addReview }: PropertyProps): JSX.Elemen
   );
 }
 
-export default Property;
+export { Property };
+export default connector(Property);

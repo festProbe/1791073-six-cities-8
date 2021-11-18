@@ -1,6 +1,13 @@
-import { OfferMock } from './offer';
+import { AuthorizationStatus } from '../const';
+import { Location, Offer } from './offer';
+import leaflet from 'leaflet';
 
 export type State = {
   city: string | null;
-  offers: OfferMock[];
+  currentPlace: Location | null;
+  map: leaflet.Map | null,
+  allOffers: Offer[];
+  offers: Offer[];
+  authorizationStatus: AuthorizationStatus,
+  isDataLoaded: boolean,
 }
