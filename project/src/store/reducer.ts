@@ -8,7 +8,6 @@ const DEFAULT_CITY = 'Paris';
 const initialState = {
   city: DEFAULT_CITY,
   currentPlace: null,
-  map: null,
   allOffers: [],
   offers: [],
   authorizationStatus: AuthorizationStatus.Unknown,

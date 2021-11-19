@@ -1,7 +1,6 @@
-import { AuthorizationStatus } from '../const';
+import { AppRoute, AuthorizationStatus } from '../const';
 import { ActionType } from '../types/action';
 import { Location, Offer } from '../types/offer';
-import leaflet from 'leaflet';
 
 export const choosenCity = (city: string | null) => ({
   type: ActionType.ChooseCity,
@@ -11,11 +10,6 @@ export const choosenCity = (city: string | null) => ({
 export const selectedCurrentPlace = (location: Location) => ({
   type: ActionType.SelectedCurrentPlace,
   payload: location,
-} as const);
-
-export const mapFromChosenCity = (map: leaflet.Map) => ({
-  type: ActionType.MapFromChosenCity,
-  payload: map,
 } as const);
 
 export const offersFromChosenCity = () => ({
@@ -41,4 +35,9 @@ export const requireAuthorization = (authStatus: AuthorizationStatus) => ({
 
 export const requireLogout = () => ({
   type: ActionType.RequireLogout,
+} as const);
+
+export const redirectToRoute = (url: AppRoute) => ({
+  type: ActionType.RedirectToRoute,
+  payload: url,
 } as const);

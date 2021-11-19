@@ -1,5 +1,5 @@
 import Main from '../main/main';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Router as BrowserRouter, Switch, Route } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
 import Favorites from '../favorites/favorites';
@@ -14,6 +14,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import LoadingScreen from '../loading-screen/loading-screen';
 import { useState } from 'react';
 import { Offer } from '../../types/offer';
+import browserHistory from '../../browser-history';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
@@ -43,7 +44,7 @@ function App(props: PropsFromRedux): JSX.Element {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route path={AppRoute.Main} exact>
           <Main setOffer={setOffer} />;
@@ -52,7 +53,6 @@ function App(props: PropsFromRedux): JSX.Element {
           exact
           path={AppRoute.Favorites}
           render={() => <Favorites />}
-          authorizationStatus={AuthorizationStatus.Auth}
         >
         </PrivateRoute>
         <Route path={AppRoute.SignIn} exact>
