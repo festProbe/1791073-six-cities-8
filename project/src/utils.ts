@@ -18,7 +18,7 @@ export function getListClass(pathname: string): string {
   switch (pathname) {
     case AppRoute.Main:
       return LIST_CLASSES.MAIN_LIST_CLASS;
-    case AppRoute.Room:
+    case AppRoute.RoomWithId:
       return LIST_CLASSES.PROPERTY_LIST_CLASS;
     default:
       return '';
@@ -29,7 +29,7 @@ export function getCardClass(pathname: string): string {
   switch (pathname) {
     case AppRoute.Main:
       return CARD_CLASSES.MAIN_CARD_CLASS;
-    case AppRoute.Room:
+    case AppRoute.RoomWithId:
       return CARD_CLASSES.PROPERTY_CARD_CLASS;
     default:
       return '';
@@ -40,7 +40,7 @@ export function getImageWrapperClass(pathname: string): string {
   switch (pathname) {
     case AppRoute.Main:
       return CARD_CLASSES.MAIN_CARD_IMAGE_WRAPPER_CLASS;
-    case AppRoute.Room:
+    case AppRoute.RoomWithId:
       return CARD_CLASSES.PROPERTY_CARD_IMAGE_WRAPPER_CLASS;
     default:
       return '';

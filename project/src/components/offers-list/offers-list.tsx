@@ -7,17 +7,15 @@ import Card from '../card/card';
 type OffersListProps = {
   offers: Offer[];
   selectedPlace: (place: Location) => void;
-  setOffer: (offer: Offer) => void;
 }
 
-function OffersList({ offers, selectedPlace, setOffer }: OffersListProps): JSX.Element {
+function OffersList({ offers, selectedPlace }: OffersListProps): JSX.Element {
 
   const match = useRouteMatch();
 
   const cards = offers.map((place) => (
     <Card
       offer={place}
-      setOffer={(): void => setOffer(place)}
       selectedPlace={(): void => selectedPlace(place.location)}
       key={place.id}
     />));

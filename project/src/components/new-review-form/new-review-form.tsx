@@ -1,15 +1,16 @@
 import { ChangeEvent, useState, MouseEvent, FormEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { sendReview } from '../../store/api-actions';
 
-type ReviewProps = {
-  addReview: (comment: string, rating: number) => void;
+type NewReviewProps = {
+  id: string;
 }
 
-function NewReview(props: ReviewProps): JSX.Element {
+function NewReview({ id }: NewReviewProps): JSX.Element {
 
-  const { addReview } = props;
-
-  const [text, setCommentText] = useState('');
+  const [comment, setCommentText] = useState('');
   const [rating, setRating] = useState(0);
+  const dispatch = useDispatch();
 
   function handleChangeText(event: ChangeEvent<HTMLTextAreaElement>): void {
     const MIN_REVIEW_SYMBOLS_COUNT = 50;
@@ -42,6 +43,7 @@ function NewReview(props: ReviewProps): JSX.Element {
     inputElements.forEach((element) => element.removeAttribute('checked'));
     event.currentTarget.setAttribute('checked', '');
     const ratingValue = event.currentTarget.getAttribute('value');
+
     if (ratingValue !== null) {
       setRating(parseInt(ratingValue, 10));
     }
@@ -49,7 +51,8 @@ function NewReview(props: ReviewProps): JSX.Element {
 
   function handleOnSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    addReview(text, rating);
+    dispatch(sendReview({ id, rating, comment }));
+    setCommentText('');
   }
 
   return (
@@ -93,7 +96,7 @@ function NewReview(props: ReviewProps): JSX.Element {
       </div>
       <textarea
         className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"
-        value={text}
+        value={comment}
         onChange={handleChangeText}
         required
         minLength={50}
