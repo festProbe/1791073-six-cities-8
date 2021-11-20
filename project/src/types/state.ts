@@ -1,5 +1,6 @@
 import { AuthorizationStatus } from '../const';
 import { RootState } from '../store/root-reducer';
+import { AuthInfo } from './auth-data';
 import { Comment } from './comment';
 import { Location, Offer } from './offer';
 
@@ -20,6 +21,7 @@ export type OffersReducerState = {
 
 export type AuthReducerState = {
   authorizationStatus: AuthorizationStatus;
+  userInfo: AuthInfo;
   isDataLoaded: boolean;
 }
 

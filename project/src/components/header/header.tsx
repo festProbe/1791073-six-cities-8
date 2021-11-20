@@ -2,11 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { logoutAction } from '../../store/api-actions';
-import { State } from '../../types/state';
+import { getAuthorizationStatus, getUserInfo } from '../../store/auth-reducer/selectors';
 import Logo from '../logo/logo';
 
 function Header(): JSX.Element {
-  const authorizationStatus = useSelector(({ AUTH }: State) => AUTH.authorizationStatus);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const userInfo = useSelector(getUserInfo);
+  const { email } = userInfo;
   const dispatch = useDispatch();
 
   return (
@@ -25,7 +27,7 @@ function Header(): JSX.Element {
                     <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favorites}>
                       <div className="header__avatar-wrapper user__avatar-wrapper">
                       </div>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                      <span className="header__user-name user__name">{email}</span>
                     </Link>
                   </li>
                   <li className="header__nav-item">

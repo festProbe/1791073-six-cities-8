@@ -3,40 +3,29 @@ import { Offer } from '../../types/offer';
 import { AppRoute } from '../../const';
 import { useRouteMatch } from 'react-router';
 import { getCardClass, getImageWrapperClass } from '../../utils';
-import { ThunkAppDispatch } from '../../types/action';
-import { fetchOfferAction } from '../../store/api-actions';
-import { connect, ConnectedProps } from 'react-redux';
+import { MouseEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { postFavoriteStatus } from '../../store/api-actions';
 
 type CardProps = {
   offer: Offer,
   selectedPlace: () => void,
 }
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  setChosenOffer(id: string) {
-    dispatch(fetchOfferAction(id));
-  },
-});
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectionProps = PropsFromRedux & CardProps;
-
-function Card({ offer, selectedPlace }: ConnectionProps): JSX.Element {
-
+function Card({ offer, selectedPlace }: CardProps): JSX.Element {
+  const dispatch = useDispatch();
   const match = useRouteMatch();
 
   const { rating, price, type, title, previewImage, id, isPremium, isFavorite } = offer;
 
-  const onCardClick = () => {
-    // eslint-disable-next-line no-console
-    console.log('hello');
+  const stars = {
+    width: rating * 20,
   };
 
+  const favoriteButtonHandler = (evt: MouseEvent<HTMLElement>) => {
+    evt.preventDefault();
 
-  const stars = {
-    width: rating * 15,
+    dispatch(postFavoriteStatus(id, Number(!isFavorite)));
   };
 
   return (
@@ -50,9 +39,7 @@ function Card({ offer, selectedPlace }: ConnectionProps): JSX.Element {
           </div > : ''
       }
       <div className={getImageWrapperClass(match.path)}>
-        <Link to={AppRoute.Room + id}
-          onClick={onCardClick}
-        >
+        <Link to={AppRoute.Room + id} >
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </Link>
       </div>
@@ -62,7 +49,11 @@ function Card({ offer, selectedPlace }: ConnectionProps): JSX.Element {
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type="button">
+          <button
+            className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`}
+            type="button"
+            onClick={favoriteButtonHandler}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -84,5 +75,4 @@ function Card({ offer, selectedPlace }: ConnectionProps): JSX.Element {
   );
 }
 
-export { Card };
-export default connector(Card);
+export default Card;

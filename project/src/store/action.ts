@@ -1,79 +1,32 @@
+import { createAction } from '@reduxjs/toolkit';
 import { AuthorizationStatus } from '../const';
 import { ActionType } from '../types/action';
+import { AuthInfo } from '../types/auth-data';
 import { Comment } from '../types/comment';
 import { Location, Offer } from '../types/offer';
 
-export const choosenCity = (city: string | null) => ({
-  type: ActionType.ChooseCity,
-  payload: city,
-} as const);
+// Actions for OffersReducer
+export const chooseCity = createAction<string | null>(ActionType.ChooseCity);
+export const getSelectedPlace = createAction<Location>(ActionType.SelectCurrentPlace);
+export const getOffersFromChosenCity = createAction(ActionType.OffersFromChosenCity);
+export const getOffersBySortType = createAction<string>(ActionType.OffersBySortType);
+export const loadOffers = createAction<Offer[]>(ActionType.LoadOffers);
 
-export const selectCurrentPlace = (location: Location) => ({
-  type: ActionType.SelectCurrentPlace,
-  payload: location,
-} as const);
+// Actions for OfferReducer
+export const loadOffer = createAction<Offer | null>(ActionType.LoadOffer);
+export const loadNearby = createAction<Offer[]>(ActionType.LoadNearby);
+export const loadComments = createAction<Comment[]>(ActionType.LoadComments);
+export const checkIsLoadedOffer = createAction<boolean>(ActionType.CheckIsLoadedOffer);
+export const showLoadOfferError = createAction<string>(ActionType.LoadOfferError);
 
-export const offersFromChosenCity = () => ({
-  type: ActionType.OffersFromChosenCity,
-} as const);
+// Actions for AuthReducer
+export const requireAuthorization = createAction<AuthorizationStatus>(ActionType.RequireAuthorization);
+export const requireLogout = createAction(ActionType.RequireLogout);
+export const loadUser = createAction<AuthInfo>(ActionType.LoadUserInfo);
 
-export const offersBySortType = (sortType: string) => ({
-  type: ActionType.OffersBySortType,
-  payload: sortType,
-} as const);
-
-export const loadOffer = (chosenOffer: Offer) => ({
-  type: ActionType.LoadOffer,
-  payload: chosenOffer,
-} as const);
-
-export const loadNearby = (nearby: Offer[]) => ({
-  type: ActionType.LoadNearby,
-  payload: nearby,
-} as const);
-
-export const loadComments = (comments: Comment[]) => ({
-  type: ActionType.LoadComments,
-  payload: comments,
-} as const);
-
-export const checkIsLoadedOffer = (isLoaded: boolean) => ({
-  type: ActionType.CheckIsLoadedOffer,
-  payload: isLoaded,
-} as const);
-
-export const showLoadOfferError = (errorMessage: string) => ({
-  type: ActionType.LoadOfferError,
-  payload: errorMessage,
-} as const);
-
-export const loadOffers = (allOffers: Offer[]) => ({
-  type: ActionType.LoadOffers,
-  payload: {
-    allOffers,
-  },
-} as const);
-
-export const requireAuthorization = (authStatus: AuthorizationStatus) => ({
-  type: ActionType.RequireAuthorization,
-  payload: authStatus,
-} as const);
-
-export const requireLogout = () => ({
-  type: ActionType.RequireLogout,
-} as const);
-
-export const redirectToRoute = (url: string) => ({
-  type: ActionType.RedirectToRoute,
-  payload: url,
-} as const);
-
-export const loadFavorites = (offers: Offer[]) => ({
-  type: ActionType.LoadFavorites,
-  payload: offers,
-} as const);
-
-export const checkFavoritesIsLoading = (payload: boolean) => ({
-  type: ActionType.CheckFavoritesIsLoading,
-  payload,
-} as const);
+// Actions for FavoritesReducer
+export const loadFavorites = createAction<Offer[]>(ActionType.LoadFavorites);
+export const checkFavoritesIsLoading = createAction<boolean>(ActionType.CheckFavoritesIsLoading);
+export const changeFavoriteStatus = createAction<Offer>(ActionType.ChangeFavoriteStatus);
+// OtherActions
+export const redirectToRoute = createAction<string>(ActionType.RedirectToRoute);
