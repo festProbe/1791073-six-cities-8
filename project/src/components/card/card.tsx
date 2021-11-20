@@ -3,26 +3,40 @@ import { Offer } from '../../types/offer';
 import { AppRoute } from '../../const';
 import { useRouteMatch } from 'react-router';
 import { getCardClass, getImageWrapperClass } from '../../utils';
+import { ThunkAppDispatch } from '../../types/action';
+import { fetchOfferAction } from '../../store/api-actions';
+import { connect, ConnectedProps } from 'react-redux';
 
 type CardProps = {
   offer: Offer,
   selectedPlace: () => void,
-  setOffer: () => void,
 }
 
-function Card({ offer, selectedPlace, setOffer }: CardProps): JSX.Element {
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  setChosenOffer(id: string) {
+    dispatch(fetchOfferAction(id));
+  },
+});
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectionProps = PropsFromRedux & CardProps;
+
+function Card({ offer, selectedPlace }: ConnectionProps): JSX.Element {
 
   const match = useRouteMatch();
 
   const { rating, price, type, title, previewImage, id, isPremium, isFavorite } = offer;
 
   const onCardClick = () => {
-    setOffer();
+    // eslint-disable-next-line no-console
+    console.log('hello');
   };
 
 
   const stars = {
-    width: rating * 30,
+    width: rating * 15,
   };
 
   return (
@@ -70,4 +84,5 @@ function Card({ offer, selectedPlace, setOffer }: CardProps): JSX.Element {
   );
 }
 
-export default Card;
+export { Card };
+export default connector(Card);

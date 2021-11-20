@@ -1,5 +1,6 @@
-import { AppRoute, AuthorizationStatus } from '../const';
+import { AuthorizationStatus } from '../const';
 import { ActionType } from '../types/action';
+import { Comment } from '../types/comment';
 import { Location, Offer } from '../types/offer';
 
 export const choosenCity = (city: string | null) => ({
@@ -7,8 +8,8 @@ export const choosenCity = (city: string | null) => ({
   payload: city,
 } as const);
 
-export const selectedCurrentPlace = (location: Location) => ({
-  type: ActionType.SelectedCurrentPlace,
+export const selectCurrentPlace = (location: Location) => ({
+  type: ActionType.SelectCurrentPlace,
   payload: location,
 } as const);
 
@@ -19,6 +20,31 @@ export const offersFromChosenCity = () => ({
 export const offersBySortType = (sortType: string) => ({
   type: ActionType.OffersBySortType,
   payload: sortType,
+} as const);
+
+export const loadOffer = (chosenOffer: Offer) => ({
+  type: ActionType.LoadOffer,
+  payload: chosenOffer,
+} as const);
+
+export const loadNearby = (nearby: Offer[]) => ({
+  type: ActionType.LoadNearby,
+  payload: nearby,
+} as const);
+
+export const loadComments = (comments: Comment[]) => ({
+  type: ActionType.LoadComments,
+  payload: comments,
+} as const);
+
+export const checkIsLoadedOffer = (isLoaded: boolean) => ({
+  type: ActionType.CheckIsLoadedOffer,
+  payload: isLoaded,
+} as const);
+
+export const showLoadOfferError = (errorMessage: string) => ({
+  type: ActionType.LoadOfferError,
+  payload: errorMessage,
 } as const);
 
 export const loadOffers = (allOffers: Offer[]) => ({
@@ -37,7 +63,17 @@ export const requireLogout = () => ({
   type: ActionType.RequireLogout,
 } as const);
 
-export const redirectToRoute = (url: AppRoute) => ({
+export const redirectToRoute = (url: string) => ({
   type: ActionType.RedirectToRoute,
   payload: url,
+} as const);
+
+export const loadFavorites = (offers: Offer[]) => ({
+  type: ActionType.LoadFavorites,
+  payload: offers,
+} as const);
+
+export const checkFavoritesIsLoading = (payload: boolean) => ({
+  type: ActionType.CheckFavoritesIsLoading,
+  payload,
 } as const);

@@ -1,38 +1,38 @@
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
 import Map from '../map/map';
 import NewReview from '../new-review-form/new-review-form';
 import OffersList from '../offers-list/offers-list';
 import ReviewsList from '../reviews-list/reviews-list';
-import { Dispatch } from 'redux';
-import { Location, Offer } from '../../types/offer';
-import { Actions } from '../../types/action';
-import { selectedCurrentPlace } from '../../store/action';
+import { Location } from '../../types/offer';
 import Header from '../header/header';
+import { useParams } from 'react-router';
+import LoadingScreen from '../loading-screen/loading-screen';
+import { AuthorizationStatus } from '../../const';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { State } from '../../types/state';
+import { fetchOfferAction } from '../../store/api-actions';
+import { selectCurrentPlace } from '../../store/action';
+import NotFoundScreen from '../not-found-screen/not-found-screen';
 
-type PropertyProps = {
-  offer: Offer | null;
-  setOffer: (offer: Offer) => void;
-  addReview: (comment: string, rating: number) => void;
-}
+function Property(): JSX.Element {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
 
-const mapStateToProps = ({ offers, currentPlace }: State) => ({
-  offers,
-  currentPlace,
-});
+  const authorizationStatus = useSelector(({ AUTH }: State) => AUTH.authorizationStatus);
+  const { offer, comments, nearbyOffers, isLoaded } = useSelector(({ OFFER }: State) => OFFER);
+  const { currentPlace } = useSelector(({ OFFERS }: State) => OFFERS);
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  setSelectedPlace(location: Location) {
-    dispatch(selectedCurrentPlace(location));
-  },
-});
+  useEffect(() => {
+    dispatch(fetchOfferAction(id));
+  }, [dispatch, id]);
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+  if (!isLoaded) {
+    return <LoadingScreen />;
+  }
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedElementProps = PropsFromRedux & PropertyProps;
-
-function Property({ offer, setOffer, offers, currentPlace, addReview, setSelectedPlace }: ConnectedElementProps): JSX.Element {
+  if (!offer) {
+    return <NotFoundScreen />;
+  }
 
   const {
     title,
@@ -47,30 +47,27 @@ function Property({ offer, setOffer, offers, currentPlace, addReview, setSelecte
     goods,
     host,
     description,
-  } = offer ? offer : offers[0];
+  } = offer;
 
   const { avatarUrl, isPro, name } = host;
+
   const stars = {
     width: rating * 30,
   };
-  // eslint-disable-next-line no-console
-  console.log(offer);
-  const neighbourhoodPlaces = offers.slice(0, 3);
   const offerImages = images.map((image) => (
-    <div key={`Image_${images.indexOf(image)}`} className="property__image-wrapper">
+    <div key={image + offer.id} className="property__image-wrapper">
       <img className="property__image" src={image} alt="Studio" />
     </div>
   ));
 
   const offerGoods = goods.map((good) => (
-    <li key={`Image_${images.indexOf(good)}`} className="property__inside-item">
+    <li key={`${good} + ${offer.id}`} className="property__inside-item">
       {good}
     </li>
   ));
   function onCardHover(location: Location) {
-    setSelectedPlace(location);
+    dispatch(selectCurrentPlace(location));
   }
-
 
   return (
     <>
@@ -136,7 +133,7 @@ function Property({ offer, setOffer, offers, currentPlace, addReview, setSelecte
                 <div className="property__host">
                   <h2 className="property__host-title">Meet the host</h2>
                   <div className="property__host-user user">
-                    <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
+                    <div className={`property__avatar-wrapper ${isPro ? 'property__avatar-wrapper--pro' : ''} user__avatar-wrapper`}>
                       <img className="property__avatar user__avatar" src={avatarUrl} width="74" height="74" alt="Host avatar" />
                     </div>
                     <span className="property__user-name">
@@ -154,20 +151,20 @@ function Property({ offer, setOffer, offers, currentPlace, addReview, setSelecte
                   </div>
                 </div>
                 <section className="property__reviews reviews">
-                  <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                  <ReviewsList />
-                  <NewReview addReview={addReview} />
+                  <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length}</span></h2>
+                  <ReviewsList comments={comments} />
+                  {authorizationStatus === AuthorizationStatus.Auth ? <NewReview id={id} /> : ''}
                 </section>
               </div>
             </div>
-            <section className="property__map map">
-              <Map offers={offers} currentPlace={currentPlace} />
+            <section className="property__map map" style={nearbyOffers.length !== 0 ? { backgroundImage: 'none' } : {}}>
+              <Map offers={nearbyOffers} currentPlace={currentPlace} />
             </section>
           </section>
           <div className="container">
             <section className="near-places places">
               <h2 className="near-places__title">Other places in the neighbourhood</h2>
-              <OffersList offers={neighbourhoodPlaces} selectedPlace={onCardHover} setOffer={setOffer} />
+              <OffersList offers={nearbyOffers} selectedPlace={onCardHover} />
             </section>
           </div>
         </main>
@@ -176,5 +173,4 @@ function Property({ offer, setOffer, offers, currentPlace, addReview, setSelecte
   );
 }
 
-export { Property };
-export default connector(Property);
+export default Property;
