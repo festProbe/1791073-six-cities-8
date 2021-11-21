@@ -1,7 +1,8 @@
-import { Actions, ActionType } from '../../types/action';
+import { createReducer } from '@reduxjs/toolkit';
 import { OfferReducerState } from '../../types/state';
+import { checkIsLoadedOffer, loadComments, loadNearby, loadOffer, showLoadOfferError } from '../action';
 
-const initialState = {
+const initialState: OfferReducerState = {
   offer: null,
   nearbyOffers: [],
   comments: [],
@@ -9,21 +10,23 @@ const initialState = {
   error: '',
 };
 
-const offerReducer = (state: OfferReducerState = initialState, action: Actions): OfferReducerState => {
-  switch (action.type) {
-    case ActionType.LoadOffer:
-      return { ...state, offer: action.payload };
-    case ActionType.LoadNearby:
-      return { ...state, nearbyOffers: action.payload };
-    case ActionType.LoadComments:
-      return { ...state, comments: action.payload };
-    case ActionType.LoadOfferError:
-      return { ...state, error: action.payload };
-    case ActionType.CheckIsLoadedOffer:
-      return { ...state, isLoaded: action.payload };
-    default:
-      return state;
-  }
-};
+const offerReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(loadOffer, (state, action) => {
+      state.offer = action.payload;
+    })
+    .addCase(loadComments, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(loadNearby, (state, action) => {
+      state.nearbyOffers = action.payload;
+    })
+    .addCase(showLoadOfferError, (state, action) => {
+      state.error = action.payload;
+    })
+    .addCase(checkIsLoadedOffer, (state, action) => {
+      state.isLoaded = action.payload;
+    });
+});
 
 export { offerReducer };

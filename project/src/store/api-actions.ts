@@ -1,9 +1,9 @@
 import { ThunkActionResult } from '../types/action';
-import { checkIsLoadedOffer, loadComments, loadNearby, loadOffer, loadOffers, offersFromChosenCity, redirectToRoute, requireAuthorization, requireLogout, showLoadOfferError } from './action';
+import { checkIsLoadedOffer, loadComments, loadNearby, loadOffer, loadOffers, getOffersFromChosenCity, redirectToRoute, requireAuthorization, requireLogout, showLoadOfferError, loadUser, loadFavorites, changeFavoriteStatus } from './action';
 import { saveToken, dropToken, Token } from '../services/token';
 import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
 import { Offer, OfferFromServer } from '../types/offer';
-import { AuthData } from '../types/auth-data';
+import { AuthData, AuthInfo, AuthInfoFromServer } from '../types/auth-data';
 import { Comment, CommentFromServer, SendCommentType } from '../types/comment';
 
 function AdaptToClient(offer: OfferFromServer): Offer {
@@ -58,6 +58,17 @@ function AdaptCommentToClient(comment: CommentFromServer): Comment {
   };
 }
 
+function AdaptUserInfoToClient(userInfo: AuthInfoFromServer): AuthInfo {
+  return {
+    avatarUrl: userInfo['avatar_url'],
+    email: userInfo.email,
+    id: userInfo.id,
+    isPro: userInfo['is_pro'],
+    name: userInfo.name,
+    token: userInfo.token,
+  };
+}
+
 export const fetchOfferAction = (id: string): ThunkActionResult =>
 
   async (dispatch, _getState, api): Promise<void> => {
@@ -81,15 +92,15 @@ export const fetchOffersAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const { data } = await api.get<OfferFromServer[]>(APIRoute.Offers);
     dispatch(loadOffers(data.map((offer) => AdaptToClient(offer))));
-    dispatch(offersFromChosenCity());
+    dispatch(getOffersFromChosenCity());
   };
 
 export const checkAuthAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    await api.get(APIRoute.Login)
-      .then(() => {
-        dispatch(requireAuthorization(AuthorizationStatus.Auth));
-      });
+    const { data } = await api.get(APIRoute.Login);
+    dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(loadUser(AdaptUserInfoToClient(data)));
+    dispatch(fetchFavoritesOffers());
   };
 
 export const sendReview = ({ id, rating, comment }: SendCommentType): ThunkActionResult =>
@@ -105,12 +116,24 @@ export const loginAction = ({ login: email, password }: AuthData): ThunkActionRe
     saveToken(token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
     dispatch(redirectToRoute(AppRoute.Main));
+    dispatch(checkAuthAction());
   };
-
 
 export const logoutAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     api.delete(APIRoute.Logout);
     dropToken();
     dispatch(requireLogout());
+  };
+
+export const fetchFavoritesOffers = (): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const { data } = await api.get<OfferFromServer[]>(APIRoute.Favorites);
+    dispatch(loadFavorites(data.map((offer) => AdaptToClient(offer))));
+  };
+
+export const postFavoriteStatus = (id: string, favoriteStatus: number): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const { data } = await api.post<OfferFromServer>(`${APIRoute.Favorites}/${id}/${favoriteStatus}`);
+    dispatch(changeFavoriteStatus(AdaptToClient(data)));
   };

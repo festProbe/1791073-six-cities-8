@@ -1,10 +1,11 @@
-import { Actions, ActionType } from '../../types/action';
+import { createReducer } from '@reduxjs/toolkit';
 import { Offer } from '../../types/offer';
 import { OffersReducerState } from '../../types/state';
+import { changeFavoriteStatus, chooseCity, getOffersBySortType, getOffersFromChosenCity, getSelectedPlace, loadOffers } from '../action';
 
 const DEFAULT_CITY = 'Paris';
 
-const initialState = {
+const initialState: OffersReducerState = {
   city: DEFAULT_CITY,
   currentPlace: null,
   allOffers: [],
@@ -25,23 +26,27 @@ const sortOffersBySortType = (sortType: string, city: string | null, allOffers: 
   }
 };
 
-const offersReducer = (state: OffersReducerState = initialState, action: Actions): OffersReducerState => {
-  switch (action.type) {
-    case ActionType.ChooseCity:
-      return { ...state, city: action.payload };
-    case ActionType.SelectCurrentPlace:
-      return { ...state, currentPlace: action.payload };
-    case ActionType.OffersFromChosenCity:
-      return { ...state, offers: state.allOffers.filter((offer) => offer.city.name === state.city) };
-    case ActionType.OffersBySortType:
-      return { ...state, offers: sortOffersBySortType(action.payload, state.city, state.allOffers) };
-    case ActionType.LoadOffers: {
-      const { allOffers } = action.payload;
-      return { ...state, allOffers };
-    }
-    default:
-      return state;
-  }
-};
+const offersReducer = createReducer(initialState, (builder) => {
+  builder
+    .addCase(chooseCity, (state, action) => {
+      state.city = action.payload;
+    })
+    .addCase(getSelectedPlace, (state, action) => {
+      state.currentPlace = action.payload;
+    })
+    .addCase(loadOffers, (state, action) => {
+      state.allOffers = action.payload;
+    })
+    .addCase(getOffersFromChosenCity, (state) => {
+      state.offers = state.allOffers.filter((offer) => offer.city.name === state.city);
+    })
+    .addCase(getOffersBySortType, (state, action) => {
+      state.offers = sortOffersBySortType(action.payload, state.city, state.allOffers);
+    })
+    .addCase(changeFavoriteStatus, (state, action) => {
+      const index = state.offers.findIndex((offer) => offer.id === action.payload.id);
+      state.offers = [...state.offers.slice(0, index), action.payload, ...state.offers.slice(index + 1)];
+    });
+});
 
 export { offersReducer };

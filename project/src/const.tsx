@@ -18,8 +18,18 @@ export enum APIRoute {
   Logout = '/logout',
   Offer = '/hotels/',
   Nearby = '/nearby',
-  Comments = '/comments/'
+  Comments = '/comments/',
+  Favorites = '/favorite',
 }
+
+export const CITIES = {
+  PARIS: 'Paris',
+  COLOGNE: 'Cologne',
+  BRUSSEL: 'Brussel',
+  AMSTERDAM: 'Amsterdam',
+  HAMBUGR: 'Hamburg',
+  DUSSELDORF: 'Dusseldorf',
+};
 
 export const LOCATIONS = [
   {

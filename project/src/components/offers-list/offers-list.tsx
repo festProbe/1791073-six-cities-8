@@ -16,7 +16,7 @@ function OffersList({ offers, selectedPlace }: OffersListProps): JSX.Element {
   const cards = offers.map((place) => (
     <Card
       offer={place}
-      selectedPlace={(): void => selectedPlace(place.location)}
+      selectedPlace={() => selectedPlace(place.location)}
       key={place.id}
     />));
 

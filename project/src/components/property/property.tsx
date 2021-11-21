@@ -9,18 +9,20 @@ import LoadingScreen from '../loading-screen/loading-screen';
 import { AuthorizationStatus } from '../../const';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { State } from '../../types/state';
 import { fetchOfferAction } from '../../store/api-actions';
-import { selectCurrentPlace } from '../../store/action';
+import { getSelectedPlace } from '../../store/action';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
+import { getOffer } from '../../store/offer-reducer/selectors';
+import { getAuthorizationStatus } from '../../store/auth-reducer/selectors';
+import { getCurrentPlaceLocation } from '../../store/offers-reducer/selectors';
 
 function Property(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
 
-  const authorizationStatus = useSelector(({ AUTH }: State) => AUTH.authorizationStatus);
-  const { offer, comments, nearbyOffers, isLoaded } = useSelector(({ OFFER }: State) => OFFER);
-  const { currentPlace } = useSelector(({ OFFERS }: State) => OFFERS);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const { offer, comments, nearbyOffers, isLoaded } = useSelector(getOffer);
+  const currentPlace = useSelector(getCurrentPlaceLocation);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));
@@ -66,7 +68,7 @@ function Property(): JSX.Element {
     </li>
   ));
   function onCardHover(location: Location) {
-    dispatch(selectCurrentPlace(location));
+    dispatch(getSelectedPlace(location));
   }
 
   return (

@@ -1,38 +1,34 @@
 import { FormEvent, useRef } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { loginAction } from '../../store/api-actions';
-import { ThunkAppDispatch } from '../../types/action';
-import { AuthData } from '../../types/auth-data';
+import { getAuthorizationStatus } from '../../store/auth-reducer/selectors';
+
 import Logo from '../logo/logo';
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit(authData: AuthData) {
-    dispatch(loginAction(authData));
-  },
-});
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function SignIn({ onSubmit }: PropsFromRedux): JSX.Element {
+function SignIn(): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const dispatch = useDispatch();
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const history = useHistory();
 
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    return <Redirect to={AppRoute.Main} />;
+  }
+
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
-      onSubmit({
+      dispatch(loginAction({
         login: loginRef.current.value,
         password: passwordRef.current.value,
-      });
+      }));
     }
   };
 
@@ -106,5 +102,4 @@ function SignIn({ onSubmit }: PropsFromRedux): JSX.Element {
   );
 }
 
-export { SignIn };
-export default connector(SignIn);
+export default SignIn;

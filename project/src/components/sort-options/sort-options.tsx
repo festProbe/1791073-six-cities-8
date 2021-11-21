@@ -1,19 +1,11 @@
 import { MouseEventHandler } from 'react';
-import { Actions } from '../../types/action';
-import { offersBySortType } from '../../store/action';
-import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch } from 'react-redux';
+import { getOffersBySortType } from '../../store/action';
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  rerenderOffersBySortType(sortType: string) {
-    dispatch(offersBySortType(sortType));
-  },
-});
-const connector = connect(null, mapDispatchToProps);
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+function SortOptions(): JSX.Element {
+  const dispatch = useDispatch();
 
-function SortOptions({ rerenderOffersBySortType }: PropsFromRedux): JSX.Element {
   const handleSortTypeClick: MouseEventHandler = (evt) => {
     const placesOptions = document.querySelector('.places__options');
     const sortingType = document.querySelector('.places__sorting-type');
@@ -26,7 +18,7 @@ function SortOptions({ rerenderOffersBySortType }: PropsFromRedux): JSX.Element 
     }
     placesOptions?.classList.remove('places__options--opened');
     if (evt.currentTarget.textContent !== null) {
-      rerenderOffersBySortType(evt.currentTarget.textContent);
+      dispatch(getOffersBySortType(evt.currentTarget.textContent));
     }
   };
 
@@ -59,5 +51,4 @@ function SortOptions({ rerenderOffersBySortType }: PropsFromRedux): JSX.Element 
   );
 }
 
-export { SortOptions };
-export default connector(SortOptions);
+export default SortOptions;

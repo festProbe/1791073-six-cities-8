@@ -4,20 +4,22 @@ import { Link } from 'react-router-dom';
 import { MouseEventHandler } from 'react';
 import Map from '../map/map';
 import { useDispatch, useSelector } from 'react-redux';
-import { choosenCity, offersFromChosenCity, selectCurrentPlace } from '../../store/action';
+import { chooseCity, getOffersFromChosenCity, getSelectedPlace } from '../../store/action';
 import SortOptions from '../sort-options/sort-options';
-import { State } from '../../types/state';
 import Header from '../header/header';
+import { getCurrentCity, getCurrentPlaceLocation, getOffers } from '../../store/offers-reducer/selectors';
 
 function Main(): JSX.Element {
 
-  const { city, offers, currentPlace } = useSelector(({ OFFERS }: State) => OFFERS);
+  const offers = useSelector(getOffers);
+  const city = useSelector(getCurrentCity);
+  const currentPlace = useSelector(getCurrentPlaceLocation);
   const dispatch = useDispatch();
 
 
-  function onCardHover(cardLocation: Location): void {
-    dispatch(selectCurrentPlace(cardLocation));
-  }
+  const onCardHover = (cardLocation: Location): void => {
+    dispatch(getSelectedPlace(cardLocation));
+  };
 
   const handleSitiesClick: MouseEventHandler = (evt): void => {
     const citiesLinks = document.querySelectorAll('.locations__item-link');
@@ -26,8 +28,8 @@ function Main(): JSX.Element {
       link.classList.remove('tabs__item--active');
     });
     evt.currentTarget.classList.add('tabs__item--active');
-    dispatch(choosenCity(city));
-    dispatch(offersFromChosenCity());
+    dispatch(chooseCity(evt.currentTarget.textContent));
+    dispatch(getOffersFromChosenCity());
   };
 
   return (
