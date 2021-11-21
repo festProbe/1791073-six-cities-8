@@ -7,7 +7,7 @@ type ReviewListProps = {
 
 function ReviewsList({ comments }: ReviewListProps): JSX.Element {
 
-  const commentsToHTML = comments.map((comment) => <ReviewItem key={`comment_${comment.id}`} comment={comment} />);
+  const commentsToHTML = comments.slice(0, 10).map((comment) => <ReviewItem key={`comment_${comment.id}`} comment={comment} />);
   return (
     <ul className="reviews__list">
       {commentsToHTML}

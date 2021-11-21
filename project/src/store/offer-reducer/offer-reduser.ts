@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { OfferReducerState } from '../../types/state';
-import { checkIsLoadedOffer, loadComments, loadNearby, loadOffer, showLoadOfferError } from '../action';
+import { changeFavoriteStatus, checkIsLoadedOffer, loadComments, loadNearby, loadOffer, showLoadOfferError } from '../action';
 
 const initialState: OfferReducerState = {
   offer: null,
@@ -20,6 +20,16 @@ const offerReducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadNearby, (state, action) => {
       state.nearbyOffers = action.payload;
+    })
+    .addCase(changeFavoriteStatus, (state, action) => {
+      if (action.payload.id === state.offer?.id) {
+        state.offer = action.payload;
+      }
+      const index = state.nearbyOffers.findIndex((offer) => offer.id === action.payload.id);
+      if (index === -1) {
+        return;
+      }
+      state.nearbyOffers = [...state.nearbyOffers.slice(0, index), action.payload, ...state.nearbyOffers.slice(index + 1)];
     })
     .addCase(showLoadOfferError, (state, action) => {
       state.error = action.payload;

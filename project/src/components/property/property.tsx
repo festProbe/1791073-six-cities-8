@@ -2,19 +2,17 @@ import Map from '../map/map';
 import NewReview from '../new-review-form/new-review-form';
 import OffersList from '../offers-list/offers-list';
 import ReviewsList from '../reviews-list/reviews-list';
-import { Location } from '../../types/offer';
 import Header from '../header/header';
 import { useParams } from 'react-router';
 import LoadingScreen from '../loading-screen/loading-screen';
-import { AuthorizationStatus } from '../../const';
-import { useEffect } from 'react';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { MouseEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchOfferAction } from '../../store/api-actions';
-import { getSelectedPlace } from '../../store/action';
+import { fetchOfferAction, postFavoriteStatus } from '../../store/api-actions';
+import { getSelectedPlace, redirectToRoute } from '../../store/action';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { getOffer } from '../../store/offer-reducer/selectors';
 import { getAuthorizationStatus } from '../../store/auth-reducer/selectors';
-import { getCurrentPlaceLocation } from '../../store/offers-reducer/selectors';
 
 function Property(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +20,6 @@ function Property(): JSX.Element {
 
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const { offer, comments, nearbyOffers, isLoaded } = useSelector(getOffer);
-  const currentPlace = useSelector(getCurrentPlaceLocation);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));
@@ -36,8 +33,11 @@ function Property(): JSX.Element {
     return <NotFoundScreen />;
   }
 
+  const offersInMap = nearbyOffers.concat(offer);
+
   const {
     title,
+    location,
     images,
     isPremium,
     isFavorite,
@@ -67,9 +67,18 @@ function Property(): JSX.Element {
       {good}
     </li>
   ));
-  function onCardHover(location: Location) {
+  function onCardHover() {
     dispatch(getSelectedPlace(location));
   }
+
+  const favoriteButtonHandler = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+
+    if (authorizationStatus === AuthorizationStatus.NoAuth) {
+      dispatch(redirectToRoute(AppRoute.SignIn));
+    }
+    dispatch(postFavoriteStatus(id, Number(!isFavorite)));
+  };
 
   return (
     <>
@@ -97,7 +106,11 @@ function Property(): JSX.Element {
                   <h1 className="property__name">
                     {title}
                   </h1>
-                  <button className={`property__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`} type="button">
+                  <button
+                    className={`property__bookmark-button button ${isFavorite ? 'property__bookmark-button--active' : ''}`}
+                    type="button"
+                    onClick={favoriteButtonHandler}
+                  >
                     <svg className="property__bookmark-icon" width="31" height="33">
                       <use xlinkHref="#icon-bookmark"></use>
                     </svg>
@@ -160,7 +173,7 @@ function Property(): JSX.Element {
               </div>
             </div>
             <section className="property__map map" style={nearbyOffers.length !== 0 ? { backgroundImage: 'none' } : {}}>
-              <Map offers={nearbyOffers} currentPlace={currentPlace} />
+              <Map offers={offersInMap} currentPlace={location} />
             </section>
           </section>
           <div className="container">

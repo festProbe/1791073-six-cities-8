@@ -1,4 +1,4 @@
-import { FormEvent, useRef } from 'react';
+import { ChangeEvent, FormEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,21 @@ function SignIn(): JSX.Element {
   if (authorizationStatus === AuthorizationStatus.Auth) {
     return <Redirect to={AppRoute.Main} />;
   }
+
+  const changePasswordInputHandler = (evt: ChangeEvent<HTMLInputElement>): void => {
+    const MIN_PASSWORD_SYMBOLS_COUNT = 6;
+    const letters = /[a-zA-Z]/g;
+    const numbers = /[0-9]/g;
+
+    if (evt.target.value.length < MIN_PASSWORD_SYMBOLS_COUNT || !evt.target.value.match(letters) || !evt.target.value.match(numbers)) {
+      evt.target.setCustomValidity(`Password should be contain minimum ${MIN_PASSWORD_SYMBOLS_COUNT} symbols, and minimum one of them letter and one number.`);
+      document.querySelector('.login__submit')?.setAttribute('disabled', 'disabled');
+    } else {
+      evt.target.setCustomValidity('');
+      document.querySelector('.login__submit')?.removeAttribute('disabled');
+    }
+    evt.target.reportValidity();
+  };
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -79,6 +94,7 @@ function SignIn(): JSX.Element {
                     name="password"
                     placeholder="Password"
                     required
+                    onChange={changePasswordInputHandler}
                   />
                 </div>
                 <button className="login__submit form__submit button" type="submit">Sign in</button>

@@ -12,7 +12,7 @@ function NewReview({ id }: NewReviewProps): JSX.Element {
   const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
 
-  function handleChangeText(event: ChangeEvent<HTMLTextAreaElement>): void {
+  function changeTextHandler(event: ChangeEvent<HTMLTextAreaElement>): void {
     const MIN_REVIEW_SYMBOLS_COUNT = 50;
     const MAX_REVIEW_SYMBOLS_COUNT = 300;
 
@@ -38,7 +38,7 @@ function NewReview({ id }: NewReviewProps): JSX.Element {
     }
   }
 
-  function hanleSetCheckedAttribute(event: MouseEvent): void {
+  function setCheckedAttributeHandler(event: MouseEvent): void {
     const inputElements = document.querySelectorAll('.form__rating-input');
     inputElements.forEach((element) => element.removeAttribute('checked'));
     event.currentTarget.setAttribute('checked', '');
@@ -59,35 +59,35 @@ function NewReview({ id }: NewReviewProps): JSX.Element {
     <form className="reviews__form form" action="#" method="post" encType="multipart/form-data" autoComplete="off" onSubmit={handleOnSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating"  >
-        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" onClick={hanleSetCheckedAttribute} />
+        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" onClick={setCheckedAttributeHandler} />
         <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect" >
           <svg className="form__star-image" width="37" height="33">
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
 
-        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" onClick={hanleSetCheckedAttribute} />
+        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" onClick={setCheckedAttributeHandler} />
         <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
           <svg className="form__star-image" width="37" height="33">
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
 
-        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" onClick={hanleSetCheckedAttribute} />
+        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" onClick={setCheckedAttributeHandler} />
         <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
           <svg className="form__star-image" width="37" height="33">
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
 
-        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" onClick={hanleSetCheckedAttribute} />
+        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" onClick={setCheckedAttributeHandler} />
         <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
           <svg className="form__star-image" width="37" height="33">
             <use xlinkHref="#icon-star"></use>
           </svg>
         </label>
 
-        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" onClick={hanleSetCheckedAttribute} />
+        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" onClick={setCheckedAttributeHandler} />
         <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
           <svg className="form__star-image" width="37" height="33">
             <use xlinkHref="#icon-star"></use>
@@ -97,7 +97,7 @@ function NewReview({ id }: NewReviewProps): JSX.Element {
       <textarea
         className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"
         value={comment}
-        onChange={handleChangeText}
+        onChange={changeTextHandler}
         required
         minLength={50}
         maxLength={300}
