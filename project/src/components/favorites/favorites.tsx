@@ -1,10 +1,16 @@
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { getFavoriteOffers } from '../../store/favorites-reducer/selectors';
 import FavoriteOfferList from '../favorite-offer-list/favorite-offer-list';
 import Header from '../header/header';
+import FavoritesEmpty from './favorites-empty';
 
 function Favorites(): JSX.Element {
   const favoritesOffers = useSelector(getFavoriteOffers);
+  if (favoritesOffers.length === 0) {
+    return <FavoritesEmpty />;
+  }
 
   return (
     <>
@@ -24,9 +30,9 @@ function Favorites(): JSX.Element {
           </div>
         </main>
         <footer className="footer container">
-          <a className="footer__logo-link" href="main.html">
+          <Link className="footer__logo-link" to={AppRoute.Main}>
             <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
-          </a>
+          </Link>
         </footer>
       </div>
     </>

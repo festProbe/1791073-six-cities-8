@@ -57,7 +57,11 @@ function Map({ offers, currentPlace }: MapProps): JSX.Element {
 
   return (
     <div
-      style={{ height: '500px' }}
+      style={{
+        height: '630px',
+        maxWidth: '1144px',
+        margin: '0 auto',
+      }}
       ref={mapRef}
     >
 

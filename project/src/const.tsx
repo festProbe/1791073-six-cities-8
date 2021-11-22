@@ -22,14 +22,14 @@ export enum APIRoute {
   Favorites = '/favorite',
 }
 
-export const CITIES = {
-  PARIS: 'Paris',
-  COLOGNE: 'Cologne',
-  BRUSSEL: 'Brussel',
-  AMSTERDAM: 'Amsterdam',
-  HAMBUGR: 'Hamburg',
-  DUSSELDORF: 'Dusseldorf',
-};
+export const CITIES = [
+  'Paris',
+  'Cologne',
+  'Brussel',
+  'Amsterdam',
+  'Hamburg',
+  'Dusseldorf',
+];
 
 export const LOCATIONS = [
   {
@@ -70,3 +70,13 @@ export const CARD_CLASSES = {
   MAIN_CARD_IMAGE_WRAPPER_CLASS: 'cities__image-wrapper place-card__image-wrapper',
   PROPERTY_CARD_IMAGE_WRAPPER_CLASS: 'near-places__image-wrapper place-card__image-wrapper',
 };
+
+export const NO_AUTH_MESSAGE = 'Do not forget to log in.';
+export const AUTH_FAIL_MESSAGE = 'Error authorization. Try again.';
+export const AUTH_SUCCESS_MESSAGE = 'Log in success!';
+export const SEND_REVIEW_SUCCESS_MESSAGE = 'Review added.';
+export const SEND_REVIEW_FAIL_MESSAGE = 'Error sending review. Try again.';
+export const LOAD_FAVORITE_FAIL_MESSAGE = 'Error loading favorite offers.';
+export const FAVORITE_ADD_SUCCESS_MESSAGE = 'Offer added in favorites.';
+export const FAVORITE_REMOVE_SUCCESS_MESSAGE = 'Offer is not favorite.';
+export const FAVORITE_CHANGE_STATUS_FAIL_MESSAGE = 'Error adding/removing offer to favorite. Try again.';

@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { useRouteMatch } from 'react-router';
 import { getCardClass, getImageWrapperClass } from '../../utils';
 import { MouseEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { postFavoriteStatus } from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/auth-reducer/selectors';
+import { redirectToRoute } from '../../store/action';
 
 type CardProps = {
   offer: Offer,
@@ -13,6 +15,7 @@ type CardProps = {
 }
 
 function Card({ offer, selectedPlace }: CardProps): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
   const dispatch = useDispatch();
   const match = useRouteMatch();
 
@@ -24,6 +27,10 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
 
   const favoriteButtonHandler = (evt: MouseEvent<HTMLElement>) => {
     evt.preventDefault();
+
+    if (authorizationStatus === AuthorizationStatus.NoAuth) {
+      dispatch(redirectToRoute(AppRoute.SignIn));
+    }
 
     dispatch(postFavoriteStatus(id, Number(!isFavorite)));
   };
@@ -39,7 +46,7 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
           </div > : ''
       }
       <div className={getImageWrapperClass(match.path)}>
-        <Link to={AppRoute.Room + id} >
+        <Link to={AppRoute.Main} >
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </Link>
       </div>

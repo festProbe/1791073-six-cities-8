@@ -8,6 +8,7 @@ import { chooseCity, getOffersFromChosenCity, getSelectedPlace } from '../../sto
 import SortOptions from '../sort-options/sort-options';
 import Header from '../header/header';
 import { getCurrentCity, getCurrentPlaceLocation, getOffers } from '../../store/offers-reducer/selectors';
+import MainEmpty from './main-empty';
 
 function Main(): JSX.Element {
 
@@ -16,6 +17,9 @@ function Main(): JSX.Element {
   const currentPlace = useSelector(getCurrentPlaceLocation);
   const dispatch = useDispatch();
 
+  if (offers.length === 0) {
+    return <MainEmpty />;
+  }
 
   const onCardHover = (cardLocation: Location): void => {
     dispatch(getSelectedPlace(cardLocation));
@@ -91,7 +95,12 @@ function Main(): JSX.Element {
                 {offers.length === 0 ? '' : <OffersList offers={offers} selectedPlace={onCardHover} />}
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map" style={offers.length !== 0 ? { backgroundImage: 'none' } : {}}>
+                <section
+                  className="cities__map map"
+                  style={
+                    offers.length !== 0 ? { backgroundImage: 'none' } : {}
+                  }
+                >
                   {offers.length !== 0 ? <Map offers={offers} currentPlace={currentPlace} /> : ''}
                 </section>
               </div>
