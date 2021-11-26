@@ -1,10 +1,5 @@
-import {
-  ThunkAction,
-  ThunkDispatch
-} from 'redux-thunk';
-import {
-  AxiosInstance
-} from 'axios';
+import { ThunkAction } from 'redux-thunk';
+import { AxiosInstance } from 'axios';
 import { State } from './state';
 import { Action } from 'redux';
 
@@ -17,9 +12,7 @@ export enum ActionType {
   LoadOffer = 'property/loadOffer',
   LoadNearby = 'property/loadNearby',
   CheckIsLoadedOffer = 'property/isLoadingOffer',
-  CheckFavoritesIsLoading = 'favorites/checkIsFavoritesLoading',
   ChangeFavoriteStatus = 'favorites/changeFavoriteStatus',
-  LoadOfferError = 'property/loadOfferError',
   LoadComments = 'property/comments',
   LoadFavorites = 'favorites/loadFavorites',
   LoadUserInfo = 'user/loadUserInfo',
@@ -29,5 +22,3 @@ export enum ActionType {
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Action>;
-
-export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Action>;

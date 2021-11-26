@@ -5,14 +5,14 @@ import { changeFavoriteStatus, chooseCity, getOffersBySortType, getOffersFromCho
 
 const DEFAULT_CITY = 'Paris';
 
-const initialState: OffersReducerState = {
+export const initialState: OffersReducerState = {
   city: DEFAULT_CITY,
   currentPlace: null,
   allOffers: [],
   offers: [],
 };
 
-const sortOffersBySortType = (sortType: string, city: string | null, allOffers: Offer[]) => {
+export const sortOffersBySortType = (sortType: string, city: string | null, allOffers: Offer[]) => {
   const sortedOffers = allOffers.filter((offer) => offer.city.name === city);
   switch (sortType) {
     case 'Price: low to high':

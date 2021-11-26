@@ -16,7 +16,6 @@ import {
   redirectToRoute,
   requireAuthorization,
   requireLogout,
-  showLoadOfferError,
   loadUser,
   loadFavorites,
   changeFavoriteStatus
@@ -30,11 +29,11 @@ import {
   LOAD_FAVORITE_FAIL_MESSAGE,
   FAVORITE_ADD_SUCCESS_MESSAGE,
   FAVORITE_REMOVE_SUCCESS_MESSAGE,
-  FAVORITE_CHANGE_STATUS_FAIL_MESSAGE
+  FAVORITE_CHANGE_STATUS_FAIL_MESSAGE,
+  LOAD_OFFER_ERROR_MESSAGE
 } from '../const';
 
 export const fetchOfferAction = (id: string): ThunkActionResult =>
-
   async (dispatch, _getState, api): Promise<void> => {
     dispatch(checkIsLoadedOffer(false));
     try {
@@ -44,13 +43,12 @@ export const fetchOfferAction = (id: string): ThunkActionResult =>
       dispatch(loadComments(comments.data.map((comment) => AdaptCommentToClient(comment))));
       const nearby = await api.get<OfferFromServer[]>(APIRoute.Offer + id + APIRoute.Nearby);
       dispatch(loadNearby(nearby.data.map((nearbyOffer) => AdaptToClient(nearbyOffer))));
+      dispatch(checkIsLoadedOffer(true));
     }
     catch {
-      dispatch(showLoadOfferError('Не удалось загузить данные о предложении!'));
+      toast.error(LOAD_OFFER_ERROR_MESSAGE);
     }
-    dispatch(checkIsLoadedOffer(true));
   };
-
 
 export const fetchOffersAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {

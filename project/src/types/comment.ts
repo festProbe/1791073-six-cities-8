@@ -1,11 +1,11 @@
-type User = {
+export type User = {
   avatarUrl: string,
   id: number,
   isPro: boolean,
   name: string
 }
 
-type UserFromServer = {
+export type UserFromServer = {
   'avatar_url': string,
   id: number,
   'is_pro': boolean,
@@ -14,7 +14,7 @@ type UserFromServer = {
 
 export type Comment = {
   comment: string,
-  date: Date,
+  date: string,
   id: number,
   rating: number,
   user: User,
@@ -22,7 +22,7 @@ export type Comment = {
 
 export type CommentFromServer = {
   comment: string,
-  date: Date,
+  date: string,
   id: number,
   rating: number,
   user: UserFromServer,

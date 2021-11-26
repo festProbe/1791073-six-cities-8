@@ -17,7 +17,6 @@ export const loadOffer = createAction<Offer | null>(ActionType.LoadOffer);
 export const loadNearby = createAction<Offer[]>(ActionType.LoadNearby);
 export const loadComments = createAction<Comment[]>(ActionType.LoadComments);
 export const checkIsLoadedOffer = createAction<boolean>(ActionType.CheckIsLoadedOffer);
-export const showLoadOfferError = createAction<string>(ActionType.LoadOfferError);
 
 // Actions for AuthReducer
 export const requireAuthorization = createAction<AuthorizationStatus>(ActionType.RequireAuthorization);
@@ -26,7 +25,6 @@ export const loadUser = createAction<AuthInfo>(ActionType.LoadUserInfo);
 
 // Actions for FavoritesReducer
 export const loadFavorites = createAction<Offer[]>(ActionType.LoadFavorites);
-export const checkFavoritesIsLoading = createAction<boolean>(ActionType.CheckFavoritesIsLoading);
 export const changeFavoriteStatus = createAction<Offer>(ActionType.ChangeFavoriteStatus);
 // OtherActions
 export const redirectToRoute = createAction<string>(ActionType.RedirectToRoute);

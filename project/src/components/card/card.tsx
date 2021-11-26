@@ -46,7 +46,7 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
           </div > : ''
       }
       <div className={getImageWrapperClass(match.path)}>
-        <Link to={AppRoute.Main} >
+        <Link to={AppRoute.Room + id} >
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
         </Link>
       </div>

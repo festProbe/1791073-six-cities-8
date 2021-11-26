@@ -3,7 +3,7 @@ import { AuthorizationStatus } from '../../const';
 import { AuthReducerState } from '../../types/state';
 import { loadUser, requireAuthorization, requireLogout } from '../action';
 
-const initialState: AuthReducerState = {
+export const initialState: AuthReducerState = {
   authorizationStatus: AuthorizationStatus.Unknown,
   userInfo: {
     avatarUrl: '',

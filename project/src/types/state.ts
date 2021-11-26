@@ -27,7 +27,6 @@ export type AuthReducerState = {
 
 export type FavoriteReducerState = {
   offers: Offer[],
-  isLoading: boolean,
 }
 
 export type State = RootState;

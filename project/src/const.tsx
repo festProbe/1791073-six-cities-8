@@ -80,3 +80,4 @@ export const LOAD_FAVORITE_FAIL_MESSAGE = 'Error loading favorite offers.';
 export const FAVORITE_ADD_SUCCESS_MESSAGE = 'Offer added in favorites.';
 export const FAVORITE_REMOVE_SUCCESS_MESSAGE = 'Offer is not favorite.';
 export const FAVORITE_CHANGE_STATUS_FAIL_MESSAGE = 'Error adding/removing offer to favorite. Try again.';
+export const LOAD_OFFER_ERROR_MESSAGE = 'Error loading offers info';
