@@ -78,7 +78,7 @@ describe('Reducer: offersReducer', () => {
         payload: 'UNKNOWN_SORT_TYPE',
       };
       expect(offersReducer(state, sortOffersBySortTypeAction))
-        .toEqual({ ...initialState, offers: state.offers });
+        .toEqual({ ...initialState, offers: sortOffersBySortType('UNKNOWN_SORT_TYPE', state.city, state.allOffers) });
     });
   });
 

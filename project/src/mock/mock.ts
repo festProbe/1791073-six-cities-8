@@ -1,7 +1,9 @@
 import { datatype, internet, name, address, commerce, image } from 'faker';
+import { CITIES } from '../const';
 import { AuthInfo } from '../types/auth-data';
 import { Comment, CommentFromServer, User, UserFromServer } from '../types/comment';
 import { Location, Offer, OfferFromServer } from '../types/offer';
+import { getRandomInt } from '../utils';
 
 export const makeUserData = (): AuthInfo => ({
   avatarUrl: internet.avatar(),
@@ -34,7 +36,7 @@ export const makeOffer = (): Offer => ({
       longitude: datatype.float(),
       zoom: datatype.number(),
     },
-    name: address.cityName(),
+    name: CITIES[getRandomInt(0, CITIES.length)],
   },
   description: commerce.productDescription(),
   goods: new Array(3).fill(commerce.product()),
@@ -44,7 +46,7 @@ export const makeOffer = (): Offer => ({
     isPro: datatype.boolean(),
     name: name.firstName(),
   },
-  id: datatype.string(),
+  id: `${datatype.number() + getRandomInt(1, 9999)}`,
   images: new Array(3).fill(image.dataUri()),
   isFavorite: datatype.boolean(),
   isPremium: datatype.boolean(),
@@ -106,7 +108,7 @@ export const makeComment = (): Comment => ({
 
 export const makeCommentFromServer = (): CommentFromServer => ({
   comment: datatype.string(),
-  date: `${datatype.datetime()}`,
+  date: `${datatype.datetime()} `,
   id: datatype.number(),
   rating: datatype.number(),
   user: makeCommentUserDataFromServer(),

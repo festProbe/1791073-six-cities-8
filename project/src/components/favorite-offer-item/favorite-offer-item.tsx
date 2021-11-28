@@ -1,9 +1,9 @@
 import { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../const';
-import { postFavoriteStatus } from '../store/api-actions';
-import { Offer } from '../types/offer';
+import { AppRoute } from '../../const';
+import { postFavoriteStatus } from '../../store/api-actions';
+import { Offer } from '../../types/offer';
 
 type FavoriteOfferItemProps = {
   offer: Offer;
@@ -23,7 +23,7 @@ function FavoriteOfferItem({ offer }: FavoriteOfferItemProps): JSX.Element {
   return (
     <article className="favorites__card place-card">
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <Link to={AppRoute.Room + id}>
+        <Link to={AppRoute.Room + id} data-testid='card-info-page'>
           <img className="place-card__image" src={previewImage} width="150" height="110" alt={title} />
         </Link>
       </div>

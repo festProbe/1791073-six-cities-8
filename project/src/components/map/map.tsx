@@ -63,6 +63,7 @@ function Map({ offers, currentPlace }: MapProps): JSX.Element {
         margin: '0 auto',
       }}
       ref={mapRef}
+      data-testid='map'
     >
 
     </div>

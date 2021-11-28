@@ -106,6 +106,7 @@ function SignIn(): JSX.Element {
                   onClick={() => history.push(AppRoute.Main)}
                   className="locations__item-link"
                   to="/"
+                  data-testid='Go to main'
                 >
                   <span>Amsterdam</span>
                 </Link>

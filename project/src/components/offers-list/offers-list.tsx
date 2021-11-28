@@ -23,6 +23,7 @@ function OffersList({ offers, selectedPlace }: OffersListProps): JSX.Element {
   return (
     <div
       className={getListClass(match.path)}
+      data-testid='offer-list'
     >
       {cards}
     </div>

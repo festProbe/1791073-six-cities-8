@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, CITIES } from '../../const';
-import FavoriteOfferItem from '../../favorite-offer-item/favorite-offer-item';
+import FavoriteOfferItem from '../favorite-offer-item/favorite-offer-item';
 import { Offer } from '../../types/offer';
+import { getRandomInt } from '../../utils';
 
 type FavoriteOfferListProps = {
   offers: Offer[];
@@ -21,13 +22,13 @@ function FavoriteOfferList({ offers }: FavoriteOfferListProps): JSX.Element {
         <li className="favorites__locations-items">
           <div className="favorites__locations locations locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={AppRoute.Main}>
+              <Link className="locations__item-link" to={AppRoute.Main} data-testid='main-page'>
                 <span>{favoritesList[0].city.name}</span>
               </Link>
             </div>
           </div>
           <div className="favorites__places">
-            {favoritesList.map((favoriteItem) => <FavoriteOfferItem key={favoriteItem.id} offer={favoriteItem} />)}
+            {favoritesList.map((favoriteItem) => <FavoriteOfferItem key={favoriteItem.id + favoriteItem.title + getRandomInt(0, 3)} offer={favoriteItem} />)}
           </div>
         </li>
       );

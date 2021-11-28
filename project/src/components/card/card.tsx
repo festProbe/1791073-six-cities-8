@@ -38,6 +38,7 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
   return (
     <article className={getCardClass(match.path)}
       onMouseOver={selectedPlace}
+      data-testid='card-hover'
     >
       {
         isPremium ?
@@ -47,7 +48,7 @@ function Card({ offer, selectedPlace }: CardProps): JSX.Element {
       }
       <div className={getImageWrapperClass(match.path)}>
         <Link to={AppRoute.Room + id} >
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place" />
+          <img className="place-card__image" src={previewImage} width="260" height="200" alt={title} data-testid='card-info-page'/>
         </Link>
       </div>
       <div className="place-card__info">

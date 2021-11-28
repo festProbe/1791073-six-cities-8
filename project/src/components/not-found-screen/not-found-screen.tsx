@@ -18,7 +18,7 @@ function NotFoundScreen(): JSX.Element {
             <section className="locations container">
               <ul className="locations__list tabs__list">
                 <li className="locations__item">
-                  <Link className="locations__item-link tabs__item" to={AppRoute.Main}>
+                  <Link className="locations__item-link tabs__item" to={AppRoute.Main} data-testid='main-page-route'>
                     <span>Paris</span>
                   </Link>
                 </li>
