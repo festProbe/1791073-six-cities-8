@@ -31,7 +31,6 @@ export const createAPI = (onUnauthorized: UnauthorizedCallback): AxiosInstance =
   api.interceptors.request.use(
     (config: AxiosRequestConfig) => {
       const token = getToken();
-
       if (token) {
         config.headers['x-token'] = token;
       }
